@@ -25,8 +25,11 @@ type OtpScreenProps = {
 };
 
 const OtpVerificationScreen = ({ route, navigation }: OtpScreenProps) => {
-  const { phoneNumber } = route.params;
-  const { signIn } = useAuth();
+  //const { phoneNumber } = route.params;
+  //const { signIn } = useAuth();
+
+  const { phoneNumber, verificationId } = route.params;
+  const { confirmOtp } = useAuth();
   
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(60);
@@ -85,29 +88,51 @@ const OtpVerificationScreen = ({ route, navigation }: OtpScreenProps) => {
   };
   
   // Verify OTP
+  // const handleVerify = async () => {
+  //   const enteredOtp = otp.join('');
+    
+  //   setIsVerifying(true);
+  //   try {
+  //     const success = await signIn(phoneNumber, enteredOtp);
+      
+  //     if (success) {
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'ProfileCreation' }],
+  //       });
+  //     } else {
+  //       Alert.alert(
+  //         "Verification Failed", 
+  //         "The code you entered is incorrect. Please try again."
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Alert.alert(
+  //       "Verification Error",
+  //       "Something went wrong. Please try again."
+  //     );
+  //   } finally {
+  //     setIsVerifying(false);
+  //   }
+  // };
+
+
   const handleVerify = async () => {
     const enteredOtp = otp.join('');
-    
     setIsVerifying(true);
+    
     try {
-      const success = await signIn(phoneNumber, enteredOtp);
-      
+      const success = await confirmOtp(verificationId, enteredOtp);
       if (success) {
         navigation.reset({
           index: 0,
           routes: [{ name: 'ProfileCreation' }],
         });
       } else {
-        Alert.alert(
-          "Verification Failed", 
-          "The code you entered is incorrect. Please try again."
-        );
+        Alert.alert("Verification Failed", "The code you entered is incorrect.");
       }
     } catch (error) {
-      Alert.alert(
-        "Verification Error",
-        "Something went wrong. Please try again."
-      );
+      Alert.alert("Error", "Something went wrong. Please try again.");
     } finally {
       setIsVerifying(false);
     }

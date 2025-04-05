@@ -1,4 +1,5 @@
 // src/screens/auth/PhoneAuthScreen.tsx
+// src/screens/auth/PhoneAuthScreen.tsx
 import React, { useState } from 'react';
 import { 
   View, 
@@ -9,19 +10,42 @@ import {
   StatusBar,
   SafeAreaView,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
+import { useAuth } from '../../contexts/AuthContext'; // Make sure this path is correct
 
 const PhoneAuthScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+91'); // Default to India
+  const [isLoading, setIsLoading] = useState(false);
   
-  const handleContinue = () => {
-    // For now, just navigate to the OTP screen
-    // Later we'll implement actual Firebase phone auth
-    navigation.navigate('OtpVerification', { 
-      phoneNumber: countryCode + phoneNumber 
-    });
+  // Use the auth context
+  const { sendVerification } = useAuth();
+  
+  const handleContinue = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) return;
+    
+    const fullPhoneNumber = countryCode + phoneNumber;
+    setIsLoading(true);
+    
+    try {
+      const success = await sendVerification(fullPhoneNumber);
+      
+      if (success) {
+        navigation.navigate('OtpVerification', { 
+          phoneNumber: fullPhoneNumber 
+        });
+      } else {
+        Alert.alert("Verification Failed", "Failed to send verification code. Please try again.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -66,12 +90,16 @@ const PhoneAuthScreen = ({ navigation }) => {
           <TouchableOpacity 
             style={[
               styles.button, 
-              (!phoneNumber || phoneNumber.length < 10) ? styles.buttonDisabled : {}
+              (isLoading || !phoneNumber || phoneNumber.length < 10) ? styles.buttonDisabled : {}
             ]} 
             onPress={handleContinue}
-            disabled={!phoneNumber || phoneNumber.length < 10}
+            disabled={isLoading || !phoneNumber || phoneNumber.length < 10}
           >
-            <Text style={styles.buttonText}>Continue</Text>
+            {isLoading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.buttonText}>Continue</Text>
+            )}
           </TouchableOpacity>
           
           <Text style={styles.terms}>
