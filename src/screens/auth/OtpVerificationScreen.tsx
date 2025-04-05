@@ -139,127 +139,127 @@ const OtpVerificationScreen = ({ route, navigation }: OtpScreenProps) => {
                 key={index}
                 ref={el => inputRefs.current[index] = el}
                 style={styles.otpInput}
-               // src/screens/auth/OtpVerificationScreen.tsx (continued)
-               value={digit}
-               onChangeText={(value) => handleOtpChange(value, index)}
-               onKeyPress={(e) => handleKeyPress(e, index)}
-               keyboardType="number-pad"
-               maxLength={1}
-               autoFocus={index === 0}
-             />
-           ))}
-         </View>
-         
-         <View style={styles.timerContainer}>
-           {timer > 0 ? (
-             <Text style={styles.timer}>Resend code in {formatTime(timer)}</Text>
-           ) : (
-             <TouchableOpacity onPress={handleResend}>
-               <Text style={styles.resendButton}>Resend Code</Text>
-             </TouchableOpacity>
-           )}
-         </View>
-       </View>
-       
-       <View style={styles.footer}>
-         <TouchableOpacity 
-           style={[
-             styles.button, 
-             (otp.includes('') || isVerifying) ? styles.buttonDisabled : {}
-           ]} 
-           onPress={handleVerify}
-           disabled={otp.includes('') || isVerifying}
-         >
-           {isVerifying ? (
-             <ActivityIndicator color="#FFFFFF" size="small" />
-           ) : (
-             <Text style={styles.buttonText}>Verify</Text>
-           )}
-         </TouchableOpacity>
-       </View>
-     </KeyboardAvoidingView>
-   </SafeAreaView>
- );
+                // src/screens/auth/OtpVerificationScreen.tsx (continued)
+                value={digit}
+                onChangeText={(value) => handleOtpChange(value, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
+                keyboardType="number-pad"
+                maxLength={1}
+                autoFocus={index === 0}
+              />
+            ))}
+          </View>
+          
+          <View style={styles.timerContainer}>
+            {timer > 0 ? (
+              <Text style={styles.timer}>Resend code in {formatTime(timer)}</Text>
+            ) : (
+              <TouchableOpacity onPress={handleResend}>
+                <Text style={styles.resendButton}>Resend Code</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        
+        <View style={styles.footer}>
+          <TouchableOpacity 
+            style={[
+              styles.button, 
+              (otp.includes('') || isVerifying) ? styles.buttonDisabled : {}
+            ]} 
+            onPress={handleVerify}
+            disabled={otp.includes('') || isVerifying}
+          >
+            {isVerifying ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.buttonText}>Verify</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
- container: {
-   flex: 1,
-   backgroundColor: '#FFFFFF',
- },
- keyboardAvoid: {
-   flex: 1,
- },
- header: {
-   flexDirection: 'row',
-   alignItems: 'center',
-   padding: 16,
-   borderBottomWidth: 1,
-   borderBottomColor: '#F0F0F0',
- },
- backButton: {
-   fontSize: 24,
-   marginRight: 16,
- },
- headerTitle: {
-   fontSize: 18,
-   fontWeight: '600',
- },
- content: {
-   flex: 1,
-   padding: 24,
-   justifyContent: 'center',
- },
- description: {
-   fontSize: 16,
-   marginBottom: 32,
-   color: '#666666',
-   textAlign: 'center',
- },
- otpContainer: {
-   flexDirection: 'row',
-   justifyContent: 'space-between',
-   marginBottom: 32,
- },
- otpInput: {
-   width: 45,
-   height: 50,
-   borderWidth: 1,
-   borderColor: '#DDDDDD',
-   borderRadius: 8,
-   textAlign: 'center',
-   fontSize: 20,
- },
- timerContainer: {
-   alignItems: 'center',
- },
- timer: {
-   color: '#888888',
-   fontSize: 14,
- },
- resendButton: {
-   color: '#FF6B6B',
-   fontSize: 16,
-   fontWeight: '600',
- },
- footer: {
-   padding: 24,
- },
- button: {
-   backgroundColor: '#FF6B6B',
-   borderRadius: 12,
-   height: 56,
-   justifyContent: 'center',
-   alignItems: 'center',
- },
- buttonDisabled: {
-   backgroundColor: '#FFADAD',
- },
- buttonText: {
-   color: '#FFFFFF',
-   fontSize: 18,
-   fontWeight: '600',
- },
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  backButton: {
+    fontSize: 24,
+    marginRight: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  content: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 32,
+    color: '#666666',
+    textAlign: 'center',
+  },
+  otpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 32,
+  },
+  otpInput: {
+    width: 45,
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  timerContainer: {
+    alignItems: 'center',
+  },
+  timer: {
+    color: '#888888',
+    fontSize: 14,
+  },
+  resendButton: {
+    color: '#FF6B6B',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    padding: 24,
+  },
+  button: {
+    backgroundColor: '#FF6B6B',
+    borderRadius: 12,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#FFADAD',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
 });
 
 export default OtpVerificationScreen;
