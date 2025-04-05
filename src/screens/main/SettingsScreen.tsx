@@ -52,50 +52,6 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
       ]
     );
   };
-
-  
-const handleEditProfile = () => {
-  // Navigate back to profile screen and open edit modal
-  navigation.goBack();
-  // You would trigger the edit modal on the profile screen
-  // This is a workaround since we don't have a state management solution yet
-  setTimeout(() => {
-    // You would trigger the edit modal here in a real app
-    alert('Edit Profile functionality will be implemented in the future.');
-  }, 500);
-};
-
-const handleChangePhone = () => {
-  alert('Change Phone Number functionality will be implemented in the future.');
-};
-
-const handleConnectInstagram = () => {
-  navigation.navigate('InstagramConnection');
-};
-
-const handleBlockedUsers = () => {
-  alert('Blocked Users functionality will be implemented in the future.');
-};
-
-const handleProximityRange = () => {
-  alert('Proximity Range settings will be implemented in the future.');
-};
-
-const handleNotificationPreferences = () => {
-  alert('Notification Preferences will be implemented in the future.');
-};
-
-const handleHelpCenter = () => {
-  alert('Help Center will be implemented in the future.');
-};
-
-const handlePrivacyPolicy = () => {
-  alert('Privacy Policy will be displayed in the future.');
-};
-
-const handleTerms = () => {
-  alert('Terms of Service will be displayed in the future.');
-};
   
   const handleDeleteAccount = () => {
     Alert.alert(
@@ -137,21 +93,20 @@ const handleTerms = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
           
-          <TouchableOpacity style={styles.settingItem} onPress={handleEditProfile}>
-  <Text style={styles.settingLabel}>Edit Profile</Text>
-  <Text style={styles.settingAction}>></Text>
-</TouchableOpacity>
-
+          <TouchableOpacity style={styles.settingItem}>
+            <Text style={styles.settingLabel}>Edit Profile</Text>
+            <Text style={styles.settingAction}>></Text>
+          </TouchableOpacity>
           
-<TouchableOpacity style={styles.settingItem} onPress={handleChangePhone}>
-  <Text style={styles.settingLabel}>Change Phone Number</Text>
-  <Text style={styles.settingAction}>></Text>
-</TouchableOpacity>
+          <TouchableOpacity style={styles.settingItem}>
+            <Text style={styles.settingLabel}>Change Phone Number</Text>
+            <Text style={styles.settingAction}>></Text>
+          </TouchableOpacity>
           
-<TouchableOpacity style={styles.settingItem} onPress={handleConnectInstagram}>
-  <Text style={styles.settingLabel}>Connect Instagram</Text>
-  <Text style={styles.settingAction}>></Text>
-</TouchableOpacity>
+          <TouchableOpacity style={styles.settingItem}>
+            <Text style={styles.settingLabel}>Connect Instagram</Text>
+            <Text style={styles.settingAction}>></Text>
+          </TouchableOpacity>
         </View>
         
         <View style={styles.section}>
@@ -269,8 +224,6 @@ const handleTerms = () => {
         >
           <Text style={styles.deleteAccountButtonText}>Delete Account</Text>
         </TouchableOpacity>
-
-
         
         <View style={styles.versionInfo}>
           <Text style={styles.versionText}>NearMe v1.0.0</Text>

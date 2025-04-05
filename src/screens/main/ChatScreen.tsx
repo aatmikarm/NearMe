@@ -1,5 +1,5 @@
 // src/screens/main/ChatScreen.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,11 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { useUser } from '../../contexts/UserContext';
+import {useUser} from '../../contexts/UserContext';
+import {MainStackNavigationProp, MainStackParamList} from '../../navigation';
+import {RouteProp} from '@react-navigation/native';
 
 type Message = {
   id: string;
@@ -23,26 +25,20 @@ type Message = {
 };
 
 type ChatScreenProps = {
-  route: {
-    params: {
-      matchId: string;
-      userName: string;
-      userPhoto: string;
-    }
-  };
-  navigation: any;
+  route: RouteProp<MainStackParamList, 'Chat'>;
+  navigation: MainStackNavigationProp;
 };
 
-const ChatScreen = ({ route, navigation }: ChatScreenProps) => {
-  const { matchId, userName, userPhoto } = route.params;
-  const { userProfile } = useUser();
-  
+const ChatScreen = ({route, navigation}: ChatScreenProps) => {
+  const {matchId, userName, userPhoto} = route.params;
+  const {userProfile} = useUser();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const flatListRef = useRef<FlatList>(null);
-  
+
   // Load mock messages for demo
   useEffect(() => {
     // Simulate API call delay
@@ -52,140 +48,158 @@ const ChatScreen = ({ route, navigation }: ChatScreenProps) => {
       setIsLoading(false);
     }, 1000);
   }, []);
-  
+
   // Scroll to bottom when messages change
   useEffect(() => {
     if (messages.length > 0 && flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true });
+      flatListRef.current.scrollToEnd({animated: true});
     }
   }, [messages]);
-  
+
   // Generate some mock messages for demo
   const generateMockMessages = (): Message[] => {
     const mockMessages: Message[] = [];
     const currentUserId = userProfile?.uid || 'current-user';
     const otherUserId = 'other-user';
-    
+
     // Create messages from last 3 days
     const now = new Date();
-    
+
     // Day 1
     mockMessages.push({
       id: '1',
       text: 'Hi there!',
       senderId: otherUserId,
-      createdAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+      createdAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000),
     });
-    
+
     mockMessages.push({
       id: '2',
       text: 'Hey! Nice to match with you',
       senderId: currentUserId,
-      createdAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000 + 2 * 60 * 1000)
+      createdAt: new Date(
+        now.getTime() - 3 * 24 * 60 * 60 * 1000 + 2 * 60 * 1000,
+      ),
     });
-    
+
     // Day 2
     mockMessages.push({
       id: '3',
       text: 'What kind of places do you like to visit?',
       senderId: otherUserId,
-      createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000)
+      createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
     });
-    
+
     mockMessages.push({
       id: '4',
       text: 'I love coffee shops and art galleries. How about you?',
       senderId: currentUserId,
-      createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000 + 5 * 60 * 1000)
+      createdAt: new Date(
+        now.getTime() - 2 * 24 * 60 * 60 * 1000 + 5 * 60 * 1000,
+      ),
     });
-    
+
     // Today
     mockMessages.push({
       id: '5',
-      text: 'Me too! There\'s a new gallery opening this weekend. Would you like to go?',
+      text: "Me too! There's a new gallery opening this weekend. Would you like to go?",
       senderId: otherUserId,
-      createdAt: new Date(now.getTime() - 30 * 60 * 1000)
+      createdAt: new Date(now.getTime() - 30 * 60 * 1000),
     });
-    
+
     return mockMessages;
   };
-  
+
   // Send a message
   const handleSend = () => {
     if (inputText.trim() === '') return;
-    
+
     const newMessage: Message = {
       id: Date.now().toString(),
       text: inputText.trim(),
       senderId: userProfile?.uid || 'current-user',
-      createdAt: new Date()
+      createdAt: new Date(),
     };
-    
+
     setMessages([...messages, newMessage]);
     setInputText('');
   };
-  
+
   // Format date to show differently based on recency
   const formatMessageDate = (date: Date) => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
-    const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    
+
+    const messageDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
+
     if (messageDate.getTime() === today.getTime()) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     } else if (messageDate.getTime() === yesterday.getTime()) {
-      return 'Yesterday ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return (
+        'Yesterday ' +
+        date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+      );
     } else {
-      return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
-        ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return (
+        date.toLocaleDateString([], {month: 'short', day: 'numeric'}) +
+        ' ' +
+        date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+      );
     }
   };
-  
+
   // Group messages by date
   const groupedMessages = () => {
-    const groupedData: { title: string; data: Message[] }[] = [];
+    const groupedData: {title: string; data: Message[]}[] = [];
     let currentDate = '';
-    
+
     messages.forEach(message => {
       const date = new Date(message.createdAt);
       const dateString = date.toLocaleDateString();
-      
+
       if (dateString !== currentDate) {
         currentDate = dateString;
         groupedData.push({
           title: dateString,
-          data: [message]
+          data: [message],
         });
       } else {
         groupedData[groupedData.length - 1].data.push(message);
       }
     });
-    
+
     return groupedData;
   };
-  
+
   // Render a single message bubble
-  const renderMessage = ({ item }: { item: Message }) => {
-    const isCurrentUser = item.senderId === (userProfile?.uid || 'current-user');
-    
+  const renderMessage = ({item}: {item: Message}) => {
+    const isCurrentUser =
+      item.senderId === (userProfile?.uid || 'current-user');
+
     return (
-      <View style={[
-        styles.messageBubble,
-        isCurrentUser ? styles.currentUserBubble : styles.otherUserBubble
-      ]}>
-        <Text style={[
-          styles.messageText,
-          isCurrentUser ? styles.currentUserText : styles.otherUserText
+      <View
+        style={[
+          styles.messageBubble,
+          isCurrentUser ? styles.currentUserBubble : styles.otherUserBubble,
         ]}>
+        <Text
+          style={[
+            styles.messageText,
+            isCurrentUser ? styles.currentUserText : styles.otherUserText,
+          ]}>
           {item.text}
         </Text>
-        <Text style={[
-          styles.messageTime,
-          isCurrentUser ? styles.currentUserTime : styles.otherUserTime
-        ]}>
+        <Text
+          style={[
+            styles.messageTime,
+            isCurrentUser ? styles.currentUserTime : styles.otherUserTime,
+          ]}>
           {formatMessageDate(new Date(item.createdAt))}
         </Text>
       </View>
@@ -195,23 +209,21 @@ const ChatScreen = ({ route, navigation }: ChatScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{userName}</Text>
-        <View style={{ width: 40 }} />
+        <View style={{width: 40}} />
       </View>
-      
+
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator color="#FF6B6B" size="large" />
@@ -226,7 +238,7 @@ const ChatScreen = ({ route, navigation }: ChatScreenProps) => {
             contentContainerStyle={styles.messageList}
           />
         )}
-        
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -235,14 +247,13 @@ const ChatScreen = ({ route, navigation }: ChatScreenProps) => {
             placeholder="Type a message..."
             multiline
           />
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               styles.sendButton,
-              !inputText.trim() && styles.sendButtonDisabled
+              !inputText.trim() && styles.sendButtonDisabled,
             ]}
             onPress={handleSend}
-            disabled={!inputText.trim()}
-          >
+            disabled={!inputText.trim()}>
             <Text style={styles.sendButtonText}>→</Text>
           </TouchableOpacity>
         </View>

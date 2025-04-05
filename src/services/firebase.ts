@@ -1,22 +1,25 @@
 // src/services/firebase.ts
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import {initializeApp} from 'firebase/app';
+import {getAuth} from 'firebase/auth';
+import {getFirestore} from 'firebase/firestore';
 
-// Web-based Firebase configuration
-// Replace with your Firebase project's actual configuration
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: 'AIzaSyBwYz4l38FkVsCc0WsNWypCPgPjWaHCugI',
+  authDomain: 'nearme2025-ba8d5.firebaseapp.com',
+  projectId: 'nearme2025-ba8d5',
+  storageBucket: 'nearme2025-ba8d5.firebasestorage.app',
+  messagingSenderId: '795317137845',
+  appId: '1:795317137845:ios:d5226e8a33139ece7069fc',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Auth
 const auth = getAuth(app);
+
+// Initialize Firestore
 const firestore = getFirestore(app);
 
-export { app, auth, firestore };
+export {auth, firestore};

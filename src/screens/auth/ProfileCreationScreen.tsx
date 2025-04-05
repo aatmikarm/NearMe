@@ -1,5 +1,7 @@
 // src/screens/auth/ProfileCreationScreen.tsx
 import React, { useState } from 'react';
+import { CommonActions } from '@react-navigation/native';
+// Import AuthContext
 import { useAuth } from '../../contexts/AuthContext';
 import {
   View,
@@ -26,7 +28,9 @@ const ProfileCreationScreen = ({ navigation }: ProfileCreationProps) => {
   const [bio, setBio] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [instagram, setInstagram] = useState('');
-  const { setUserAuthenticated } = useAuth();
+
+   // Add this inside your component
+   const { setUserAuthenticated } = useAuth();
 
   // Handle photo selection
   const handleSelectPhoto = () => {
@@ -35,45 +39,16 @@ const ProfileCreationScreen = ({ navigation }: ProfileCreationProps) => {
     setPhotos([...photos, 'https://via.placeholder.com/150']);
   };
 
-  // src/screens/auth/ProfileCreationScreen.tsx
-
-// Update the handleNextStep function
-const handleNextStep = async () => {
-  if (step < 3) {
-    setStep(step + 1);
-  } else {
-    setIsLoading(true);
-    
-    // Get the current user ID
-    const userId = auth.currentUser?.uid || 'test-user-id'; // Fallback for our test user
-    
-    // Prepare profile data
-    const profileData = {
-      name,
-      age: parseInt(age),
-      gender,
-      bio,
-      photos,
-      instagram,
-      createdAt: new Date()
-    };
-    
-    // Save to Firestore
-    const success = await createUserProfile(userId, profileData);
-    
-    setIsLoading(false);
-    
-    if (success) {
-      // User is now authenticated and profile is created
-      setUserAuthenticated(true);
+  // Update the handleNextStep function
+  const handleNextStep = () => {
+    if (step < 3) {
+      setStep(step + 1);
     } else {
-      Alert.alert(
-        'Error',
-        'Failed to create profile. Please try again.'
-      );
+      // Instead of using navigation.reset, use the auth context
+      // This will trigger a re-render of the navigation container
+      setUserAuthenticated(true);
     }
-  }
-};
+  };
 
   // Render step content
   const renderStepContent = () => {

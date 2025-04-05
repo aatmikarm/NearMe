@@ -1,5 +1,5 @@
 // src/screens/main/MatchesScreen.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 
 // Mock data for matches
@@ -33,7 +33,7 @@ const MOCK_MATCHES = [
     photo: 'https://randomuser.me/api/portraits/women/44.jpg',
     lastSeen: 'Yesterday',
     hasNewActivity: true,
-  }
+  },
 ];
 
 // Mock data for new matches (recent matches)
@@ -47,49 +47,47 @@ const MOCK_NEW_MATCHES = [
     id: '5',
     name: 'Maya',
     photo: 'https://randomuser.me/api/portraits/women/24.jpg',
-  }
+  },
 ];
 
 type MatchesScreenProps = {
   navigation: any;
 };
 
-const MatchesScreen = ({ navigation }: MatchesScreenProps) => {
+const MatchesScreen = ({navigation}: MatchesScreenProps) => {
   const [matches, setMatches] = useState(MOCK_MATCHES);
   const [newMatches, setNewMatches] = useState(MOCK_NEW_MATCHES);
 
   // Render new match item
-  const renderNewMatchItem = ({ item }) => (
-    <TouchableOpacity 
+  const renderNewMatchItem = ({item}) => (
+    <TouchableOpacity
       style={styles.newMatchItem}
-      onPress={() => navigation.navigate('Chat', { matchId: item.id })}
-    >
-      <Image source={{ uri: item.photo }} style={styles.newMatchPhoto} />
+      onPress={() => navigation.navigate('Chat', {matchId: item.id})}>
+      <Image source={{uri: item.photo}} style={styles.newMatchPhoto} />
       <Text style={styles.newMatchName}>{item.name}</Text>
     </TouchableOpacity>
   );
 
   // Render match item
-  const renderMatchItem = ({ item }) => (
-    <TouchableOpacity 
-    style={styles.matchItem}
-    onPress={() => navigation.navigate('Chat', { 
-      matchId: item.id,
-      userName: item.name,
-      userPhoto: item.photo
-    })}
-  >
+  const renderMatchItem = ({item}) => (
+    <TouchableOpacity
+      style={styles.matchItem}
+      onPress={() =>
+        navigation.navigate('Chat', {
+          matchId: item.id,
+          userName: item.name,
+          userPhoto: item.photo,
+        })
+      }>
       <View style={styles.matchItemLeft}>
-        <Image source={{ uri: item.photo }} style={styles.matchPhoto} />
+        <Image source={{uri: item.photo}} style={styles.matchPhoto} />
         <View>
           <Text style={styles.matchName}>{item.name}</Text>
           <Text style={styles.matchLastSeen}>{item.lastSeen}</Text>
         </View>
       </View>
-      
-      {item.hasNewActivity && (
-        <View style={styles.activityDot} />
-      )}
+
+      {item.hasNewActivity && <View style={styles.activityDot} />}
     </TouchableOpacity>
   );
 
@@ -103,10 +101,9 @@ const MatchesScreen = ({ navigation }: MatchesScreenProps) => {
       <Text style={styles.emptySubtitle}>
         Connect with people nearby to start matching
       </Text>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.emptyButton}
-        onPress={() => navigation.navigate('Nearby')}
-      >
+        onPress={() => navigation.navigate('Nearby')}>
         <Text style={styles.emptyButtonText}>Explore Nearby</Text>
       </TouchableOpacity>
     </View>
@@ -118,11 +115,11 @@ const MatchesScreen = ({ navigation }: MatchesScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Matches</Text>
       </View>
-      
+
       {!hasMatches ? (
         renderEmptyState()
       ) : (
@@ -135,7 +132,7 @@ const MatchesScreen = ({ navigation }: MatchesScreenProps) => {
                   horizontal
                   data={newMatches}
                   renderItem={renderNewMatchItem}
-                  keyExtractor={(item) => item.id}
+                  keyExtractor={item => item.id}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.newMatchesList}
                 />
@@ -145,7 +142,7 @@ const MatchesScreen = ({ navigation }: MatchesScreenProps) => {
           }
           data={matches}
           renderItem={renderMatchItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.matchesList}
         />
       )}

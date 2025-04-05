@@ -1,16 +1,16 @@
 // src/services/index.ts
-import { AuthService, UserService, MatchService } from './types';
-import { mockAuthService } from './mock/mockAuth';
-import { mockUserService } from './mock/mockUser';
-import { mockMatchService } from './mock/mockMatch';
+import {AuthService, UserService, MatchService} from './types';
+import {mockAuthService} from './mock/mockAuth';
+import {mockUserService} from './mock/mockUser';
+import {mockMatchService} from './mock/mockMatch';
+import {realAuthService} from './realAuth';
 
 // This will be used to determine which implementation to use
-// Tomorrow when you have admin rights, you can set this to false
-let useMockServices = true;
+let useMockServices = false;
 
 // Service factory functions
 export function getAuthService(): AuthService {
-  return mockAuthService;
+  return useMockServices ? mockAuthService : realAuthService;
 }
 
 export function getUserService(): UserService {

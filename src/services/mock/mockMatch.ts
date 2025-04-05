@@ -5,7 +5,9 @@ import { MatchService, ProximityEvent, Match } from '../types';
 const proximityEvents: ProximityEvent[] = [];
 const matches: Match[] = [];
 
-// Mock nearby users
+// src/services/mock/mockMatch.ts (update to the MOCK_USERS array)
+
+// Mock nearby users - expanded with more variety
 const MOCK_USERS = [
   {
     id: 'user1',

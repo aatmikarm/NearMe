@@ -1,99 +1,112 @@
 // src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuthService } from '../services';
+import React, {createContext, useContext, useState, useEffect} from 'react';
+import {
+  sendPhoneVerification,
+  verifyOtp,
+  createUserProfile,
+  getUserProfile,
+  getCurrentUser,
+  signOut as authSignOut,
+} from '../services/auth';
+import {User} from 'firebase/auth';
 
-type AuthContextType = {
-  user: { uid: string } | null;
+interface AuthContextType {
+  user: User | null;
   loading: boolean;
-  signIn: (phoneNumber: string, otp: string) => Promise<boolean>;
-  signOut: () => Promise<boolean>;
-  sendPhoneVerification: (phoneNumber: string) => Promise<boolean>;
-};
+  error: string | null;
+  sendVerification: (phoneNumber: string) => Promise<boolean>;
+  verifyCode: (otp: string) => Promise<boolean>;
+  signOut: () => Promise<void>;
+}
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
-  signIn: async () => false,
-  signOut: async () => false,
-  sendPhoneVerification: async () => false,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<{ uid: string } | null>(null);
+export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  
-  const authService = getAuthService();
-  
-  // Check auth state on mount
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const checkAuthState = async () => {
+    const checkUser = async () => {
       try {
-        const currentUser = await authService.getCurrentUser();
-        setUser(currentUser);
-      } catch (error) {
-        console.error('Error checking auth state:', error);
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+          const userProfile = await getUserProfile(currentUser.uid);
+          setUser({...currentUser, ...userProfile} as User);
+        }
+      } catch (err) {
+        setError('Failed to check user status');
+        console.error('Error checking user:', err);
       } finally {
         setLoading(false);
       }
     };
-    
-    checkAuthState();
+
+    checkUser();
   }, []);
-  
-  const signIn = async (phoneNumber: string, otp: string): Promise<boolean> => {
+
+  const sendVerification = async (phoneNumber: string) => {
     try {
-      const verified = await authService.verifyOtp(otp);
-      
-      if (verified) {
-        const currentUser = await authService.getCurrentUser();
-        setUser(currentUser);
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error('Error signing in:', error);
+      setError(null);
+      return await sendPhoneVerification(phoneNumber);
+    } catch (err) {
+      setError('Failed to send verification code');
+      console.error('Error sending verification:', err);
       return false;
     }
   };
-  
-  const signOut = async (): Promise<boolean> => {
+
+  const verifyCode = async (otp: string) => {
     try {
-      const success = await authService.signOut();
-      
+      setError(null);
+      const success = await verifyOtp(otp);
       if (success) {
-        setUser(null);
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+          const userProfile = await getUserProfile(currentUser.uid);
+          setUser({...currentUser, ...userProfile} as User);
+        }
       }
-      
       return success;
-    } catch (error) {
-      console.error('Error signing out:', error);
+    } catch (err) {
+      setError('Failed to verify code');
+      console.error('Error verifying code:', err);
       return false;
     }
   };
-  
-  const sendPhoneVerification = async (phoneNumber: string): Promise<boolean> => {
+
+  const signOut = async () => {
     try {
-      return await authService.sendPhoneVerification(phoneNumber);
-    } catch (error) {
-      console.error('Error sending verification:', error);
-      return false;
+      setError(null);
+      await authSignOut();
+      setUser(null);
+    } catch (err) {
+      setError('Failed to sign out');
+      console.error('Error signing out:', err);
     }
   };
-  
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        loading, 
-        signIn, 
-        signOut, 
-        sendPhoneVerification 
-      }}
-    >
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        sendVerification,
+        verifyCode,
+        signOut,
+      }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

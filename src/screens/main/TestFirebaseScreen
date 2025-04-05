@@ -1,0 +1,69 @@
+// import React, {useEffect, useState} from 'react';
+// import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+// import {auth, firestore} from '../../services/firebase';
+// import {collection, getDocs} from 'firebase/firestore';
+
+// const TestFirebaseScreen = () => {
+//   const [isConnected, setIsConnected] = useState(false);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const testConnection = async () => {
+//       try {
+//         // Test Firestore connection
+//         const querySnapshot = await getDocs(collection(firestore, 'test'));
+//         console.log('Firestore connection successful');
+
+//         // Test Auth connection
+//         const currentUser = auth.currentUser;
+//         console.log('Auth connection successful');
+
+//         setIsConnected(true);
+//       } catch (err) {
+//         console.error('Firebase connection error:', err);
+//         setError(err instanceof Error ? err.message : 'Unknown error');
+//         setIsConnected(false);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     testConnection();
+//   }, []);
+
+//   return (
+//     <View style={styles.container}>
+//       {loading ? (
+//         <ActivityIndicator size="large" color="#FF6B6B" />
+//       ) : (
+//         <View>
+//           <Text style={styles.status}>
+//             Firebase Connection:{' '}
+//             {isConnected ? '✅ Connected' : '❌ Not Connected'}
+//           </Text>
+//           {error && <Text style={styles.error}>Error: {error}</Text>}
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     padding: 20,
+//   },
+//   status: {
+//     fontSize: 18,
+//     marginBottom: 10,
+//   },
+//   error: {
+//     color: 'red',
+//     marginTop: 10,
+//   },
+// });
+
+// export default TestFirebaseScreen;

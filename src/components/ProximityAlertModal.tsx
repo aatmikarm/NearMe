@@ -61,7 +61,7 @@ const ProximityAlertModal = ({ visible, user, onClose, onView }: ProximityAlertM
       ).start();
       
       // Vibrate to alert the user
-      Vibration.vibrate([0, 100, 100, 100]);
+      //Vibration.vibrate([0, 100, 100, 100]);
     } else {
       // Reset animations
       slideAnimation.setValue(0);

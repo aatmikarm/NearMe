@@ -1,10 +1,12 @@
 // src/navigation/index.tsx
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, ActivityIndicator, View, StyleSheet } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Text, ActivityIndicator, View, StyleSheet} from 'react-native';
+import {useAuth} from '../contexts/AuthContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
 // Auth screens
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
@@ -20,38 +22,78 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 import UserDetailScreen from '../screens/main/UserDetailScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
 import MatchConfirmationScreen from '../screens/main/MatchConfirmationScreen';
+import ChatScreen from '../screens/main/ChatScreen';
+//import TestFirebaseScreen from '../screens/main/TestFirebaseScreen';
 
-const Stack = createStackNavigator();
+// Define the type for the root stack parameter list
+export type RootStackParamList = {
+  Auth: undefined;
+  Main: undefined;
+};
+
+// Define the type for the main stack parameter list
+export type MainStackParamList = {
+  Login: undefined;
+  MainTabs: undefined;
+  UserDetail: {userId: string};
+  Settings: undefined;
+  MatchConfirmation: {
+    matchId: string;
+    userId: string;
+  };
+  InstagramConnection: undefined;
+  TestFirebase: undefined;
+  Chat: {matchId: string; userName: string; userPhoto: string};
+};
+
+// Define the type for the auth stack parameter list
+export type AuthStackParamList = {
+  Welcome: undefined;
+  PhoneAuth: undefined;
+  OtpVerification: {phoneNumber: string};
+  InstagramConnection: undefined;
+  ProfileCreation: undefined;
+};
+
+// Define navigation prop types
+export type MainStackNavigationProp = StackNavigationProp<MainStackParamList>;
+export type AuthStackNavigationProp = StackNavigationProp<AuthStackParamList>;
+
+const Stack = createStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator();
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
+const AuthStackNavigator = createStackNavigator<AuthStackParamList>();
 
 // Define the MainTabs component with the tab navigator
 const MainTabs = () => (
-  <Tab.Navigator>
-    <Tab.Screen 
-      name="Nearby" 
-      component={NearbyScreen} 
+  <Tab.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}>
+    <Tab.Screen
+      name="Nearby"
+      component={NearbyScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <Text style={{ fontSize: size, color }}>📍</Text>
+        tabBarIcon: ({color, size}) => (
+          <Text style={{fontSize: size, color}}>📍</Text>
         ),
       }}
     />
-    <Tab.Screen 
-      name="Matches" 
-      component={MatchesScreen} 
+    <Tab.Screen
+      name="Matches"
+      component={MatchesScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <Text style={{ fontSize: size, color }}>❤️</Text>
+        tabBarIcon: ({color, size}) => (
+          <Text style={{fontSize: size, color}}>❤️</Text>
         ),
       }}
     />
-    <Tab.Screen 
-      name="Profile" 
-      component={ProfileScreen} 
+    <Tab.Screen
+      name="Profile"
+      component={ProfileScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <Text style={{ fontSize: size, color }}>👤</Text>
+        tabBarIcon: ({color, size}) => (
+          <Text style={{fontSize: size, color}}>👤</Text>
         ),
       }}
     />
@@ -60,50 +102,70 @@ const MainTabs = () => (
 
 // Main Stack Navigator (includes tabs and modal screens)
 const MainStack = () => (
-  <Stack.Navigator>
-    <Stack.Screen 
-      name="MainTabs" 
-      component={MainTabs} 
-      options={{ headerShown: false }}
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+      cardStyle: {backgroundColor: '#FFFFFF'},
+    }}>
+    <Stack.Screen
+      name="MainTabs"
+      component={MainTabs}
+      options={{headerShown: false}}
     />
-    <Stack.Screen 
-      name="UserDetail" 
-      component={UserDetailScreen} 
-      options={{ headerShown: false }}
+    <Stack.Screen
+      name="UserDetail"
+      component={UserDetailScreen}
+      options={{headerShown: false}}
     />
-    <Stack.Screen 
-      name="Settings" 
+    <Stack.Screen
+      name="Settings"
       component={SettingsScreen}
-      options={{ headerShown: false }}
+      options={{headerShown: false}}
     />
-    <Stack.Screen 
-      name="MatchConfirmation" 
+    <Stack.Screen
+      name="MatchConfirmation"
       component={MatchConfirmationScreen}
-      options={{ headerShown: false, presentation: 'modal' }}
+      options={{
+        headerShown: false,
+        presentation: 'modal',
+      }}
     />
-    <Stack.Screen 
-      name="InstagramConnection" 
+    <Stack.Screen
+      name="InstagramConnection"
       component={InstagramConnectionScreen}
-      options={{ headerShown: false }}
+      options={{headerShown: false}}
     />
-
-<Stack.Screen 
-  name="Chat" 
-  component={ChatScreen}
-  options={{ headerShown: false }}
-/>
+    <Stack.Screen
+      name="Chat"
+      component={ChatScreen}
+      options={{headerShown: false}}
+    />
+    {/* <Stack.Screen
+      name="TestFirebase"
+      component={TestFirebaseScreen}
+      options={{headerShown: false}}
+    /> */}
   </Stack.Navigator>
 );
 
 // Auth Stack Navigator
 const AuthStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Welcome" component={WelcomeScreen} />
-    <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
-    <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
-    <Stack.Screen name="InstagramConnection" component={InstagramConnectionScreen} />
-    <Stack.Screen name="ProfileCreation" component={ProfileCreationScreen} />
-  </Stack.Navigator>
+  <AuthStackNavigator.Navigator screenOptions={{headerShown: false}}>
+    <AuthStackNavigator.Screen name="Welcome" component={WelcomeScreen} />
+    <AuthStackNavigator.Screen name="PhoneAuth" component={PhoneAuthScreen} />
+    <AuthStackNavigator.Screen
+      name="OtpVerification"
+      component={OtpVerificationScreen}
+    />
+    <AuthStackNavigator.Screen
+      name="InstagramConnection"
+      component={InstagramConnectionScreen}
+    />
+    <AuthStackNavigator.Screen
+      name="ProfileCreation"
+      component={ProfileCreationScreen}
+    />
+  </AuthStackNavigator.Navigator>
 );
 
 // Loading component
@@ -115,7 +177,7 @@ const LoadingScreen = () => (
 );
 
 const AppNavigator = () => {
-  const { user, loading } = useAuth();
+  const {user, loading} = useAuth();
 
   // Show loading screen while checking authentication state
   if (loading) {
@@ -124,7 +186,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator screenOptions={{headerShown: false}}>
         {!user ? (
           <RootStack.Screen name="Auth" component={AuthStack} />
         ) : (
@@ -146,7 +208,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     color: '#666666',
-  }
+  },
 });
 
 export default AppNavigator;

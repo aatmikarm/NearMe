@@ -1,5 +1,5 @@
 // src/screens/main/MatchConfirmationScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,18 @@ import {
   SafeAreaView,
   StatusBar,
   Animated,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { useMatch } from '../../contexts/MatchContext';
-import { useUser } from '../../contexts/UserContext';
+import {useMatch} from '../../contexts/MatchContext';
+import {useUser} from '../../contexts/UserContext';
 
 // Mock user data - this would come from the API in a real app
-const getUserData = (userId) => ({
+const getUserData = userId => ({
   id: userId,
   name: userId === 'user1' ? 'Priya' : userId === 'user2' ? 'Rahul' : 'Aisha',
-  photo: `https://randomuser.me/api/portraits/${userId === 'user1' || userId === 'user3' ? 'women' : 'men'}/${userId === 'user1' ? 12 : userId === 'user2' ? 32 : 44}.jpg`,
+  photo: `https://randomuser.me/api/portraits/${
+    userId === 'user1' || userId === 'user3' ? 'women' : 'men'
+  }/${userId === 'user1' ? 12 : userId === 'user2' ? 32 : 44}.jpg`,
 });
 
 type MatchConfirmationProps = {
@@ -31,24 +33,27 @@ type MatchConfirmationProps = {
   navigation: any;
 };
 
-const MatchConfirmationScreen = ({ route, navigation }: MatchConfirmationProps) => {
-  const { matchId, userId } = route.params;
-  
-  const { matches, shareInstagram } = useMatch();
-  const { userProfile } = useUser();
-  
+const MatchConfirmationScreen = ({
+  route,
+  navigation,
+}: MatchConfirmationProps) => {
+  const {matchId, userId} = route.params;
+
+  const {matches, shareInstagram} = useMatch();
+  const {userProfile} = useUser();
+
   const [animation] = useState(new Animated.Value(0));
   const [isInstagramShared, setIsInstagramShared] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [matchedUser, setMatchedUser] = useState(null);
-  
+
   // Find the match
   const match = matches.find(m => m.id === matchId);
-  
+
   useEffect(() => {
     // Load matched user data
     setMatchedUser(getUserData(userId));
-    
+
     // Animate in
     Animated.timing(animation, {
       toValue: 1,
@@ -56,17 +61,17 @@ const MatchConfirmationScreen = ({ route, navigation }: MatchConfirmationProps) 
       useNativeDriver: true,
     }).start();
   }, [userId]);
-  
+
   // Derived animation values
   const opacity = animation;
   const scale = animation.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [0.5, 1.2, 1]
+    outputRange: [0.5, 1.2, 1],
   });
-  
+
   const handleShareInstagram = async () => {
     if (!match) return;
-    
+
     setIsLoading(true);
     try {
       const success = await shareInstagram(matchId, true);
@@ -79,10 +84,10 @@ const MatchConfirmationScreen = ({ route, navigation }: MatchConfirmationProps) 
       setIsLoading(false);
     }
   };
-  
+
   const handleDontShare = async () => {
     if (!match) return;
-    
+
     setIsLoading(true);
     try {
       await shareInstagram(matchId, false);
@@ -93,105 +98,108 @@ const MatchConfirmationScreen = ({ route, navigation }: MatchConfirmationProps) 
       setIsLoading(false);
     }
   };
-  
+
   const handleMessage = () => {
-    navigation.navigate('Chat', { 
-      matchId: matchId, 
+    navigation.navigate('Chat', {
+      matchId: matchId,
       userName: matchedUser?.name || 'Match',
-      userPhoto: matchedUser?.photo
+      userPhoto: matchedUser?.photo,
     });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#FF6B6B" />
-      
+
       <View style={styles.content}>
-        <Animated.View 
-          style={[
-            styles.animatedContent,
-            { opacity, transform: [{ scale }] }
-          ]}
-        >
+        <Animated.View
+          style={[styles.animatedContent, {opacity, transform: [{scale}]}]}>
           <Text style={styles.title}>It's a Match!</Text>
           {matchedUser && (
             <Text style={styles.subtitle}>
               You and {matchedUser.name} have connected
             </Text>
           )}
-          
+
           <View style={styles.photosContainer}>
             {userProfile && (
-              <Image 
-                source={{ uri: userProfile.photos?.[0]?.url || 'https://randomuser.me/api/portraits/men/46.jpg' }} 
-                style={[styles.userPhoto, styles.currentUserPhoto]} 
+              <Image
+                source={{
+                  uri:
+                    userProfile.photos?.[0]?.url ||
+                    'https://randomuser.me/api/portraits/men/46.jpg',
+                }}
+                style={[styles.userPhoto, styles.currentUserPhoto]}
               />
             )}
             {matchedUser && (
-              <Image 
-                source={{ uri: matchedUser.photo }} 
-                style={[styles.userPhoto, styles.matchedUserPhoto]} 
+              <Image
+                source={{uri: matchedUser.photo}}
+                style={[styles.userPhoto, styles.matchedUserPhoto]}
               />
             )}
           </View>
-          
+
           <View style={styles.instagramQuestion}>
             <Text style={styles.instagramTitle}>Share Instagram?</Text>
             <Text style={styles.instagramDescription}>
-              Would you like to share your Instagram with {matchedUser?.name || 'your match'}?
+              Would you like to share your Instagram with{' '}
+              {matchedUser?.name || 'your match'}?
             </Text>
-            
+
             <View style={styles.instagramButtons}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
                   styles.instagramButton,
                   isInstagramShared && styles.instagramButtonActive,
-                  isLoading && styles.instagramButtonDisabled
+                  isLoading && styles.instagramButtonDisabled,
                 ]}
                 onPress={handleShareInstagram}
-                disabled={isLoading}
-              >
-                <Text style={[
-                  styles.instagramButtonText,
-                  isInstagramShared && styles.instagramButtonTextActive
-                ]}>Yes</Text>
+                disabled={isLoading}>
+                <Text
+                  style={[
+                    styles.instagramButtonText,
+                    isInstagramShared && styles.instagramButtonTextActive,
+                  ]}>
+                  Yes
+                </Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[
                   styles.instagramButton,
                   !isInstagramShared && styles.instagramButtonActive,
-                  isLoading && styles.instagramButtonDisabled
+                  isLoading && styles.instagramButtonDisabled,
                 ]}
                 onPress={handleDontShare}
-                disabled={isLoading}
-              >
-                <Text style={[
-                  styles.instagramButtonText,
-                  !isInstagramShared && styles.instagramButtonTextActive
-                ]}>No</Text>
+                disabled={isLoading}>
+                <Text
+                  style={[
+                    styles.instagramButtonText,
+                    !isInstagramShared && styles.instagramButtonTextActive,
+                  ]}>
+                  No
+                </Text>
               </TouchableOpacity>
             </View>
-            
+
             {isLoading && (
-              <ActivityIndicator 
-                style={styles.activityIndicator} 
-                color="#FF6B6B" 
+              <ActivityIndicator
+                style={styles.activityIndicator}
+                color="#FF6B6B"
               />
             )}
           </View>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.messageButton}
-            onPress={handleMessage}
-          >
+            onPress={handleMessage}>
             <Text style={styles.messageButtonText}>Message</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.closeButton}
-            onPress={() => navigation.navigate('Nearby')}
-          >
+            onPress={() => navigation.goBack()}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </Animated.View>
