@@ -1,53 +1,27 @@
 // src/screens/auth/PhoneAuthScreen.tsx
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TextInput, 
+  TouchableOpacity, 
   StatusBar,
   SafeAreaView,
   KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-  Alert
+  Platform
 } from 'react-native';
-import { sendPhoneVerification } from '../../services/authService';
 
 const PhoneAuthScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+91'); // Default to India
-  const [isLoading, setIsLoading] = useState(false);
   
-  const handleContinue = async () => {
-    // Validate phone number
-    if (!phoneNumber || phoneNumber.length < 10) {
-      Alert.alert('Invalid Phone Number', 'Please enter a valid phone number.');
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    // Format the full phone number
-    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-    
-    // Send verification code
-    const success = await sendPhoneVerification(fullPhoneNumber);
-    
-    setIsLoading(false);
-    
-    if (success) {
-      // Navigate to OTP verification screen
-      navigation.navigate('OtpVerification', { 
-        phoneNumber: fullPhoneNumber 
-      });
-    } else {
-      Alert.alert(
-        'Verification Failed',
-        'Failed to send verification code. Please try again.'
-      );
-    }
+  const handleContinue = () => {
+    // For now, just navigate to the OTP screen
+    // Later we'll implement actual Firebase phone auth
+    navigation.navigate('OtpVerification', { 
+      phoneNumber: countryCode + phoneNumber 
+    });
   };
   
   return (
@@ -92,16 +66,12 @@ const PhoneAuthScreen = ({ navigation }) => {
           <TouchableOpacity 
             style={[
               styles.button, 
-              (!phoneNumber || phoneNumber.length < 10 || isLoading) ? styles.buttonDisabled : {}
+              (!phoneNumber || phoneNumber.length < 10) ? styles.buttonDisabled : {}
             ]} 
             onPress={handleContinue}
-            disabled={!phoneNumber || phoneNumber.length < 10 || isLoading}
+            disabled={!phoneNumber || phoneNumber.length < 10}
           >
-            {isLoading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.buttonText}>Continue</Text>
-            )}
+            <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
           
           <Text style={styles.terms}>
@@ -114,7 +84,85 @@ const PhoneAuthScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  // Your existing styles here
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  backButton: {
+    fontSize: 24,
+    marginRight: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  content: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 24,
+    color: '#666666',
+  },
+  phoneContainer: {
+    flexDirection: 'row',
+    marginBottom: 24,
+  },
+  countryCode: {
+    width: 60,
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 8,
+    marginRight: 8,
+    paddingHorizontal: 12,
+    fontSize: 16,
+  },
+  phoneInput: {
+    flex: 1,
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 16,
+  },
+  footer: {
+    padding: 24,
+  },
+  button: {
+    backgroundColor: '#FF6B6B',
+    borderRadius: 12,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonDisabled: {
+    backgroundColor: '#FFADAD',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  terms: {
+    fontSize: 12,
+    color: '#888888',
+    textAlign: 'center',
+  },
 });
 
 export default PhoneAuthScreen;
