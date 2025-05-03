@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "795317137845",
+    "project_id": "nearme2025-ba8d5",
+    "storage_bucket": "nearme2025-ba8d5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795317137845:android:dd65362e9736d5417069fc",
+        "android_client_info": {
+          "package_name": "com.aatmik.nearme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795317137845-g9k5a4bipu5v5agv9didvugnpfti2d32.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aatmik.nearme",
+            "certificate_hash": "34ce8e41d61151d8c49fe23b9e58d2be6e07ae2e"
+          }
+        },
+        {
+          "client_id": "795317137845-2h5iv7as9r2ue4d2fe92nafn2mrer8nu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYaNWf3DOv_pAtxrktfwNLVQFNeg6u7WU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795317137845-2h5iv7as9r2ue4d2fe92nafn2mrer8nu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "795317137845-1e5r6ns46el90lgem9pn3fts1vncr68p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.ExpoFirebase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

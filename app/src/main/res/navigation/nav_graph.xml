@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_nearby">
+
+    <fragment
+        android:id="@+id/navigation_nearby"
+        android:name="com.aatmik.nearme.ui.nearby.NearbyFragment"
+        android:label="@string/nearby"
+        tools:layout="@layout/fragment_nearby" />
+
+    <fragment
+        android:id="@+id/navigation_matches"
+        android:name="com.aatmik.nearme.ui.matches.MatchesFragment"
+        android:label="@string/matches"
+        tools:layout="@layout/fragment_matches" />
+
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.aatmik.nearme.ui.messages.MessagesFragment"
+        android:label="@string/messages"
+        tools:layout="@layout/fragment_messages" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.aatmik.nearme.ui.profile.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

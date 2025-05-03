@@ -1,0 +1,92 @@
+package com.aatmik.nearme.ui.auth
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.aatmik.nearme.repository.AuthRepository
+import com.google.firebase.auth.PhoneAuthCredential
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _verificationSent = MutableLiveData<Boolean>()
+    val verificationSent: LiveData<Boolean> = _verificationSent
+
+    private val _verificationError = MutableLiveData<Exception>()
+    val verificationError: LiveData<Exception> = _verificationError
+
+    private val _authResult = MutableLiveData<Result<String>?>()
+    val authResult: LiveData<Result<String>?> = _authResult
+
+    private val _userProfileExists = MutableLiveData<Boolean>()
+    val userProfileExists: LiveData<Boolean> = _userProfileExists
+
+    // Store phone number for later use
+    private var phoneNumber: String = ""
+
+    fun sendVerificationCode(phone: String) {
+        _isLoading.value = true
+        phoneNumber = phone
+
+        authRepository.sendVerificationCode(
+            phoneNumber = phone,
+            onVerificationCompleted = { credential ->
+                // Auto-verification completed
+                _isLoading.value = false
+                signInWithCredential(credential)
+            },
+            onVerificationFailed = { exception ->
+                _isLoading.value = false
+                _verificationError.value = exception
+            },
+            onCodeSent = { _ ->
+                _isLoading.value = false
+                _verificationSent.value = true
+            }
+        )
+    }
+
+    private fun signInWithCredential(credential: PhoneAuthCredential) {
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            try {
+                val user = authRepository.firebaseAuth.signInWithCredential(credential).await().user
+                if (user != null) {
+                    _authResult.value = Result.success(user.uid)
+                } else {
+                    _authResult.value = Result.failure(Exception("Authentication failed"))
+                }
+            } catch (e: Exception) {
+                _authResult.value = Result.failure(e)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun verifyCode(code: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _authResult.value = authRepository.verifyCode(code)
+            _isLoading.value = false
+        }
+    }
+
+    fun checkUserProfileExists() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId() ?: return@launch
+            val exists = authRepository.checkUserProfileExists(userId)
+            _userProfileExists.value = exists
+        }
+    }
+}
