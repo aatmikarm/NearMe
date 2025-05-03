@@ -22,6 +22,7 @@ circleimageview = "3.1.0"
 swiperefreshlayout = "1.1.0"
 google-services = "4.4.2"
 kotlin-kapt = "2.0.21"
+firebaseFirestore = "25.1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +57,7 @@ androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-r
 circle-imageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 google-services-plugin = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
+google-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

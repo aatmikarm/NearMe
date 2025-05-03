@@ -19,54 +19,65 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    // Define a consistent TAG for logging
+    private val TAG = "NearMe_MainActivity"
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate")
+        Log.d(TAG, "onCreate() called")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.d(TAG, "Setting up navigation")
         setupNavigation()
+
+        Log.d(TAG, "Checking location permissions")
         checkLocationPermission()
+
+        Log.d(TAG, "Setting up ViewModel observers")
         observeViewModel()
     }
 
-
     override fun onStart() {
-        Log.d("MainActivity", "onStart")
         super.onStart()
+        Log.d(TAG, "onStart() called")
     }
 
     override fun onResume() {
-        Log.d("MainActivity", "onResume")
         super.onResume()
+        Log.d(TAG, "onResume() called")
     }
 
     override fun onPause() {
-        Log.d("MainActivity", "onPause")
+        Log.d(TAG, "onPause() called")
         super.onPause()
     }
 
     override fun onStop() {
-        Log.d("MainActivity", "onStop")
+        Log.d(TAG, "onStop() called")
         super.onStop()
     }
 
     override fun onDestroy() {
-        Log.d("MainActivity", "onDestroy")
+        Log.d(TAG, "onDestroy() called")
         super.onDestroy()
     }
 
     private fun setupNavigation() {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        try {
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
 
-        binding.bottomNavigation.setupWithNavController(navController)
+            binding.bottomNavigation.setupWithNavController(navController)
+            Log.d(TAG, "Navigation setup completed successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up navigation: ${e.message}", e)
+        }
     }
 
     private fun checkLocationPermission() {
@@ -80,7 +91,10 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
+        Log.d(TAG, "Location permissions: FINE=$hasFineLocationPermission, COARSE=$hasCoarseLocationPermission")
+
         if (!hasFineLocationPermission || !hasCoarseLocationPermission) {
+            Log.i(TAG, "Requesting location permissions")
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -90,6 +104,7 @@ class MainActivity : AppCompatActivity() {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
+            Log.i(TAG, "Location permissions already granted")
             // Start location service
             startLocationService()
 
@@ -100,7 +115,10 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
 
+                Log.d(TAG, "Background location permission: $hasBackgroundLocationPermission")
+
                 if (!hasBackgroundLocationPermission) {
+                    Log.i(TAG, "Requesting background location permission")
                     ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
@@ -111,13 +129,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    Log.i(TAG, "Location permissions granted by user")
+                    startLocationService()
+                } else {
+                    Log.w(TAG, "Location permissions denied by user")
+                    // Handle permission denial
+                }
+            }
+            BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Background location permission granted by user")
+                } else {
+                    Log.w(TAG, "Background location permission denied by user")
+                    // Handle permission denial
+                }
+            }
+        }
+    }
+
     private fun startLocationService() {
-        val intent = Intent(this, LocationService::class.java)
-        ContextCompat.startForegroundService(this, intent)
+        Log.i(TAG, "Starting location service")
+        try {
+            val intent = Intent(this, LocationService::class.java)
+            ContextCompat.startForegroundService(this, intent)
+            Log.i(TAG, "Location service started successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start location service: ${e.message}", e)
+        }
     }
 
     private fun observeViewModel() {
         // Observe any changes or events from ViewModel
+        Log.d(TAG, "ViewModel observers setup completed")
     }
 
     companion object {

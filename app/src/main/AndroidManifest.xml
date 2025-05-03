@@ -36,6 +36,16 @@
             </intent-filter>
         </activity>
 
+        <!-- Firebase Test Activity (Set as LAUNCHER) -->
+        <activity
+            android:name=".ui.test.FirebaseTestActivity"
+            android:exported="true">
+       <!--     <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
         <!-- Main Activity -->
         <activity
             android:name=".ui.main.MainActivity"

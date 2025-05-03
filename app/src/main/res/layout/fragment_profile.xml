@@ -158,6 +158,16 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/upgrade_to_premium" />
 
+            <!-- Add this after the btn_premium button -->
+            <Button
+                android:id="@+id/btn_logout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="#FF5252"
+                android:text="Logout" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

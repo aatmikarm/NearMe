@@ -1,5 +1,6 @@
 package com.aatmik.nearme.repository
 
+import android.util.Log
 import com.aatmik.nearme.model.Conversation
 import com.aatmik.nearme.util.NotificationUtil
 import com.google.firebase.firestore.FieldValue
@@ -19,141 +20,230 @@ class ConversationRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val notificationUtil: NotificationUtil
 ) {
+    // Add a TAG for logging
+    private val TAG = "NearMe_ConversationRepo"
+
     private val conversationsCollection = firestore.collection("conversations")
 
     /**
      * Get or create a conversation for a match
      */
     suspend fun getOrCreateConversation(matchId: String): Conversation {
-        // Check if conversation exists
-        val query = conversationsCollection
-            .whereEqualTo("matchId", matchId)
-            .limit(1)
-            .get()
-            .await()
+        Log.d(TAG, "Getting or creating conversation for matchId: $matchId")
 
-        if (!query.isEmpty) {
-            // Return existing conversation
-            val document = query.documents.first()
-            return document.toObject(Conversation::class.java)?.copy(id = document.id)
-                ?: throw Exception("Failed to parse conversation")
+        try {
+            val startTime = System.currentTimeMillis()
+
+            // Check if conversation exists
+            Log.d(TAG, "Checking if conversation already exists")
+            val query = conversationsCollection
+                .whereEqualTo("matchId", matchId)
+                .limit(1)
+                .get()
+                .await()
+
+            if (!query.isEmpty) {
+                // Return existing conversation
+                Log.d(TAG, "Found existing conversation for matchId: $matchId")
+                val document = query.documents.first()
+                val conversation = document.toObject(Conversation::class.java)?.copy(id = document.id)
+
+                if (conversation == null) {
+                    Log.e(TAG, "Failed to parse existing conversation document")
+                    throw Exception("Failed to parse conversation")
+                }
+
+                val duration = System.currentTimeMillis() - startTime
+                Log.d(TAG, "Retrieved existing conversation in $duration ms")
+                return conversation
+            }
+
+            // Get match details to create conversation
+            Log.d(TAG, "No existing conversation found, creating new one")
+            Log.d(TAG, "Fetching match details from Firestore")
+            val matchDocument = firestore.collection("matches").document(matchId).get().await()
+            val users = matchDocument.get("users") as? List<String>
+
+            if (users == null) {
+                Log.e(TAG, "Invalid match data: users list is null")
+                throw Exception("Invalid match data")
+            }
+
+            Log.d(TAG, "Creating new conversation with ${users.size} participants")
+
+            // Create new conversation
+            val conversation = Conversation(
+                matchId = matchId,
+                participants = users,
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis(),
+                lastReadBy = users.associateWith { 0L }
+            )
+
+            // Save to Firestore
+            Log.d(TAG, "Saving new conversation to Firestore")
+            val conversationRef = conversationsCollection.add(conversation).await()
+
+            val newConversation = conversation.copy(id = conversationRef.id)
+            val duration = System.currentTimeMillis() - startTime
+            Log.d(TAG, "Created new conversation with ID: ${conversationRef.id} in $duration ms")
+
+            return newConversation
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting or creating conversation for matchId: $matchId", e)
+            throw e
         }
-
-        // Get match details to create conversation
-        val matchDocument = firestore.collection("matches").document(matchId).get().await()
-        val users = matchDocument.get("users") as? List<String> ?: throw Exception("Invalid match data")
-
-        // Create new conversation
-        val conversation = Conversation(
-            matchId = matchId,
-            participants = users,
-            createdAt = System.currentTimeMillis(),
-            updatedAt = System.currentTimeMillis(),
-            lastReadBy = users.associateWith { 0L }
-        )
-
-        // Save to Firestore
-        val conversationRef = conversationsCollection.add(conversation).await()
-
-        return conversation.copy(id = conversationRef.id)
     }
 
     /**
      * Get messages for a conversation as a Flow
      */
     fun getMessages(conversationId: String): Flow<List<Message>> = callbackFlow {
-        val query = conversationsCollection
-            .document(conversationId)
-            .collection("messages")
-            .orderBy("timestamp", Query.Direction.ASCENDING)
+        Log.d(TAG, "Setting up messages flow for conversationId: $conversationId")
 
-        val subscription = query.addSnapshotListener { snapshot, exception ->
-            if (exception != null) {
-                close(exception)
-                return@addSnapshotListener
+        try {
+            val query = conversationsCollection
+                .document(conversationId)
+                .collection("messages")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+
+            Log.d(TAG, "Adding snapshot listener for messages")
+            val subscription = query.addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.e(TAG, "Error in messages snapshot listener: ${exception.message}", exception)
+                    close(exception)
+                    return@addSnapshotListener
+                }
+
+                val messages = snapshot?.documents?.mapNotNull { document ->
+                    val message = document.toObject(Message::class.java)
+                    message?.copy(id = document.id)
+                } ?: emptyList()
+
+                Log.d(TAG, "Received ${messages.size} messages update for conversationId: $conversationId")
+                trySend(messages)
             }
 
-            val messages = snapshot?.documents?.mapNotNull { document ->
-                val message = document.toObject(Message::class.java)
-                message?.copy(id = document.id)
-            } ?: emptyList()
-
-            trySend(messages)
+            awaitClose {
+                Log.d(TAG, "Removing messages snapshot listener for conversationId: $conversationId")
+                subscription.remove()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up messages flow for conversationId: $conversationId", e)
+            close(e)
         }
-
-        awaitClose { subscription.remove() }
     }
 
     /**
      * Send a message
      */
     suspend fun sendMessage(conversationId: String, senderId: String, text: String): String {
-        // Get conversation to check participants
-        val conversation = conversationsCollection.document(conversationId).get().await()
-            .toObject(Conversation::class.java) ?: throw Exception("Conversation not found")
+        Log.d(TAG, "Sending message from user: $senderId in conversation: $conversationId")
 
-        // Create message
-        val message = Message(
-            senderId = senderId,
-            text = text,
-            type = "text",
-            timestamp = System.currentTimeMillis(),
-            isRead = false
-        )
+        try {
+            val startTime = System.currentTimeMillis()
 
-        // Add to Firestore
-        val messageRef = conversationsCollection
-            .document(conversationId)
-            .collection("messages")
-            .add(message)
-            .await()
+            // Get conversation to check participants
+            Log.d(TAG, "Fetching conversation details")
+            val conversation = conversationsCollection.document(conversationId).get().await()
+                .toObject(Conversation::class.java)
 
-        // Update conversation last update timestamp
-        conversationsCollection.document(conversationId)
-            .update("updatedAt", System.currentTimeMillis())
-            .await()
+            if (conversation == null) {
+                Log.e(TAG, "Conversation not found: $conversationId")
+                throw Exception("Conversation not found")
+            }
 
-        // Send notification to other participants
-        val otherParticipants = conversation.participants.filter { it != senderId }
-        for (recipientId in otherParticipants) {
-            sendMessageNotification(conversationId, senderId, recipientId, text)
+            // Create message
+            Log.d(TAG, "Creating message object")
+            val message = Message(
+                senderId = senderId,
+                text = text,
+                type = "text",
+                timestamp = System.currentTimeMillis(),
+                isRead = false
+            )
+
+            // Add to Firestore
+            Log.d(TAG, "Saving message to Firestore")
+            val messageRef = conversationsCollection
+                .document(conversationId)
+                .collection("messages")
+                .add(message)
+                .await()
+
+            // Update conversation last update timestamp
+            Log.d(TAG, "Updating conversation timestamp")
+            conversationsCollection.document(conversationId)
+                .update("updatedAt", System.currentTimeMillis())
+                .await()
+
+            // Send notification to other participants
+            val otherParticipants = conversation.participants.filter { it != senderId }
+            Log.d(TAG, "Sending notifications to ${otherParticipants.size} other participants")
+
+            for (recipientId in otherParticipants) {
+                sendMessageNotification(conversationId, senderId, recipientId, text)
+            }
+
+            val duration = System.currentTimeMillis() - startTime
+            Log.d(TAG, "Message sent with ID: ${messageRef.id} in $duration ms")
+
+            return messageRef.id
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending message in conversation: $conversationId", e)
+            throw e
         }
-
-        return messageRef.id
     }
 
     /**
      * Mark messages as read
      */
     suspend fun markMessagesAsRead(conversationId: String, userId: String) {
-        // Update last read timestamp
-        conversationsCollection.document(conversationId)
-            .update(
-                mapOf(
-                    "lastReadBy.$userId" to System.currentTimeMillis()
-                )
-            )
-            .await()
+        Log.d(TAG, "Marking messages as read for user: $userId in conversation: $conversationId")
 
-        // Mark unread messages as read
-        val messages = conversationsCollection.document(conversationId)
-            .collection("messages")
-            .whereNotEqualTo("senderId", userId)
-            .whereEqualTo("isRead", false)
-            .get()
-            .await()
+        try {
+            val startTime = System.currentTimeMillis()
 
-        for (document in messages.documents) {
+            // Update last read timestamp
+            Log.d(TAG, "Updating last read timestamp")
             conversationsCollection.document(conversationId)
-                .collection("messages")
-                .document(document.id)
                 .update(
                     mapOf(
-                        "isRead" to true,
-                        "readAt" to System.currentTimeMillis()
+                        "lastReadBy.$userId" to System.currentTimeMillis()
                     )
                 )
                 .await()
+
+            // Mark unread messages as read
+            Log.d(TAG, "Fetching unread messages")
+            val messages = conversationsCollection.document(conversationId)
+                .collection("messages")
+                .whereNotEqualTo("senderId", userId)
+                .whereEqualTo("isRead", false)
+                .get()
+                .await()
+
+            Log.d(TAG, "Found ${messages.size()} unread messages to mark as read")
+
+            var markedCount = 0
+            for (document in messages.documents) {
+                conversationsCollection.document(conversationId)
+                    .collection("messages")
+                    .document(document.id)
+                    .update(
+                        mapOf(
+                            "isRead" to true,
+                            "readAt" to System.currentTimeMillis()
+                        )
+                    )
+                    .await()
+                markedCount++
+            }
+
+            val duration = System.currentTimeMillis() - startTime
+            Log.d(TAG, "Marked $markedCount messages as read in $duration ms")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error marking messages as read in conversation: $conversationId", e)
         }
     }
 
@@ -166,16 +256,32 @@ class ConversationRepository @Inject constructor(
         recipientId: String,
         messageText: String
     ) {
-        // Get sender profile
-        val senderProfile = userRepository.getUserProfile(senderId)
+        Log.d(TAG, "Preparing to send message notification from user: $senderId to: $recipientId")
 
-        senderProfile?.let { profile ->
+        try {
+            val startTime = System.currentTimeMillis()
+
+            // Get sender profile
+            Log.d(TAG, "Fetching sender profile for notification")
+            val senderProfile = userRepository.getUserProfile(senderId)
+
+            if (senderProfile == null) {
+                Log.w(TAG, "Sender profile not found, cannot send notification")
+                return
+            }
+
+            Log.d(TAG, "Sending message notification with sender name: ${senderProfile.displayName}")
             notificationUtil.sendMessageNotification(
                 recipientId,
-                profile.displayName,
+                senderProfile.displayName,
                 messageText,
                 conversationId
             )
+
+            val duration = System.currentTimeMillis() - startTime
+            Log.d(TAG, "Message notification sent in $duration ms")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending message notification", e)
         }
     }
 }

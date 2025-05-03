@@ -92,6 +92,7 @@ dependencies {
 
     // Image Loading
     implementation(libs.glide)
+    implementation(libs.google.firebase.firestore)
     kapt(libs.glide.compiler)
 
     // Dependency Injection
