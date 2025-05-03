@@ -10,9 +10,11 @@ import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.LocationRepository
 import com.aatmik.nearme.repository.UserRepository
 import com.aatmik.nearme.util.PreferenceManager
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -178,7 +180,7 @@ class NearbyViewModel @Inject constructor(
     /**
      * Check if user matches preferences
      */
-    private fun matchesPreferences(userProfile: UserProfile): Boolean {
+    private suspend fun matchesPreferences(userProfile: UserProfile): Boolean {
         // Get gender preference
         val genderPreference = preferenceManager.getGenderPreference()
         if (!genderPreference.contains(userProfile.gender)) {
@@ -192,7 +194,7 @@ class NearbyViewModel @Inject constructor(
         }
 
         // Check if user is in blocklist
-        val currentUserId = userRepository.getCurrentUserId() ?: return false
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return false
         val currentUser = userRepository.getUserProfile(currentUserId) ?: return false
         if (currentUser.blockedUsers.contains(userProfile.uid)) {
             return false

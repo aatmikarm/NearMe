@@ -27,6 +27,10 @@ class UserRepository @Inject constructor(
         return document.toObject(UserProfile::class.java)
     }
 
+
+    fun getCurrentUserId(): String? {
+        return FirebaseAuth.getInstance().currentUser?.uid
+    }
     /**
      * Create a new user profile
      */

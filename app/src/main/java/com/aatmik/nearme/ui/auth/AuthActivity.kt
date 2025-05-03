@@ -30,10 +30,11 @@ class AuthActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         // Send verification code button
+        // In AuthActivity.kt - in the send code button click handler
         binding.btnSendCode.setOnClickListener {
             val phoneNumber = binding.etPhoneNumber.text.toString().trim()
             if (phoneNumber.isNotEmpty()) {
-                viewModel.sendVerificationCode(phoneNumber)
+                viewModel.sendVerificationCode(this, phoneNumber) // Pass 'this' as the activity
                 showVerificationCodeLayout()
             } else {
                 Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show()
@@ -54,7 +55,7 @@ class AuthActivity : AppCompatActivity() {
         binding.btnResendCode.setOnClickListener {
             val phoneNumber = binding.etPhoneNumber.text.toString().trim()
             if (phoneNumber.isNotEmpty()) {
-                viewModel.sendVerificationCode(phoneNumber)
+                viewModel.sendVerificationCode(this, phoneNumber)
             }
         }
     }

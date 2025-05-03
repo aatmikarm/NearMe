@@ -1,4 +1,4 @@
-// Create a new file: app/src/main/java/com/aatmik/nearme/ui/profile/UserProfileActivity.kt
+// Update UserProfileActivity.kt
 package com.aatmik.nearme.ui.profile
 
 import android.content.Context
@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.aatmik.nearme.databinding.ActivityProfileBinding
-import com.aatmik.nearme.model.UserProfile
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,6 +39,6 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun loadUserProfile() {
-        // This will be implemented to load the user profile
+        // Load user profile implementation
     }
 }

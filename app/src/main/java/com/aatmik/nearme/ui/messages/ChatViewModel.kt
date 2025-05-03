@@ -8,6 +8,7 @@ import com.aatmik.nearme.model.Match
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.ConversationRepository
 import com.aatmik.nearme.repository.MatchRepository
+import com.aatmik.nearme.model.Message
 import com.aatmik.nearme.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest

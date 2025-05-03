@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LocationRepository @Inject constructor(
-    private val firestore: FirebaseFirestore,
+    val firestore: FirebaseFirestore,
     private val notificationUtil: NotificationUtil,
     private val userRepository: UserRepository
 ) {
@@ -33,11 +33,11 @@ class LocationRepository @Inject constructor(
         val userProfile = userRepository.getUserProfile(currentUser.uid)
 
         // Create location document data
-        val locationData = hashMapOf(
+        val locationData = hashMapOf<String, Any>(
             "uid" to userLocation.userId,
-            h"displayName" to userProfile?.displayName ?: "",
-            "primaryPhotoUrl" to userProfile?.photos?.firstOrNull { it.isPrimary }?.url ?: "",
-            "currentLocation" to hashMapOf(
+            "displayName" to (userProfile?.displayName ?: ""),
+            "primaryPhotoUrl" to (userProfile?.photos?.firstOrNull { it.isPrimary }?.url ?: ""),
+            "currentLocation" to hashMapOf<String, Any>(
                 "geohash" to userLocation.geohash,
                 "geopoint" to com.google.firebase.firestore.GeoPoint(
                     userLocation.latitude,
@@ -54,6 +54,20 @@ class LocationRepository @Inject constructor(
         locationsCollection.document(userLocation.userId)
             .set(locationData)
             .await()
+    }
+
+    suspend fun getUserLocationById(userId: String): UserLocation? {
+        try {
+            val document = locationsCollection.document(userId).get().await()
+            // Parse and return the location data
+            if (document.exists()) {
+                // Parse the document into a UserLocation
+                // ...
+            }
+        } catch (e: Exception) {
+            // Handle error
+        }
+        return null
     }
 
     /**

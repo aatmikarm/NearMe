@@ -1,5 +1,6 @@
 package com.aatmik.nearme.ui.auth
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,11 +36,13 @@ class AuthViewModel @Inject constructor(
     // Store phone number for later use
     private var phoneNumber: String = ""
 
-    fun sendVerificationCode(phone: String) {
+    // In AuthViewModel.kt
+    fun sendVerificationCode(activity: Activity, phone: String) {
         _isLoading.value = true
         phoneNumber = phone
 
         authRepository.sendVerificationCode(
+            activity,
             phoneNumber = phone,
             onVerificationCompleted = { credential ->
                 // Auto-verification completed

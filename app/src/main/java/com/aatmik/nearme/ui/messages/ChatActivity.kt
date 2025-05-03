@@ -116,7 +116,7 @@ class ChatActivity : AppCompatActivity() {
         // Observe messages
         viewModel.messages.observe(this) { messages ->
             messageAdapter.submitList(messages)
-            if (messages.isNotEmpty()) {
+            if (messages != null && messages.isNotEmpty()) {
                 binding.recyclerView.scrollToPosition(messages.size - 1)
             }
         }

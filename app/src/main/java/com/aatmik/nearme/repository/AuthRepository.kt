@@ -1,5 +1,6 @@
 package com.aatmik.nearme.repository
 
+import android.app.Activity
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.util.PreferenceManager
 import com.google.firebase.FirebaseException
@@ -38,7 +39,9 @@ class AuthRepository @Inject constructor(
     /**
      * Send verification code
      */
+    // In AuthRepository.kt
     fun sendVerificationCode(
+        activity: Activity, // Add the activity parameter
         phoneNumber: String,
         onVerificationCompleted: (PhoneAuthCredential) -> Unit,
         onVerificationFailed: (Exception) -> Unit,
@@ -63,20 +66,15 @@ class AuthRepository @Inject constructor(
             }
         }
 
-        val options = (null as android.app.Activity?)?.let {
-            PhoneAuthOptions.newBuilder(firebaseAuth)
-                .setPhoneNumber(phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(it)
-                .setCallbacks(callback)
-                .build()
-        }
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity) // Pass the activity here
+            .setCallbacks(callback)
+            .build()
 
-        if (options != null) {
-            PhoneAuthProvider.verifyPhoneNumber(options)
-        }
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
-
     /**
      * Verify OTP code
      */

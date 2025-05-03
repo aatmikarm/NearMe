@@ -34,21 +34,21 @@ class NearbyAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onItemClicked(getItem(position))
                 }
             }
 
             binding.btnConnect.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onConnectClicked(getItem(position).userId)
                 }
             }
 
             binding.btnSkip.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onSkipClicked(getItem(position).userId)
                 }
