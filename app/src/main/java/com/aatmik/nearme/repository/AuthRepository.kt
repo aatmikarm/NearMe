@@ -63,14 +63,18 @@ class AuthRepository @Inject constructor(
             }
         }
 
-        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(null) // No activity
-            .setCallbacks(callback)
-            .build()
+        val options = (null as android.app.Activity?)?.let {
+            PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(it)
+                .setCallbacks(callback)
+                .build()
+        }
 
-        PhoneAuthProvider.verifyPhoneNumber(options)
+        if (options != null) {
+            PhoneAuthProvider.verifyPhoneNumber(options)
+        }
     }
 
     /**

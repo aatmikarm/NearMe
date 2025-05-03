@@ -6,6 +6,7 @@ import com.aatmik.nearme.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.aatmik.nearme.model.SubscriptionInfo
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject

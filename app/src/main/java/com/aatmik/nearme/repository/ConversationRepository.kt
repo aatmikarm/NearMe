@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import com.aatmik.nearme.model.Message
 import javax.inject.Singleton
 
 @Singleton
@@ -73,7 +74,8 @@ class ConversationRepository @Inject constructor(
             }
 
             val messages = snapshot?.documents?.mapNotNull { document ->
-                document.toObject(Message::class.java)?.copy(id = document.id)
+                val message = document.toObject(Message::class.java)
+                message?.copy(id = document.id)
             } ?: emptyList()
 
             trySend(messages)

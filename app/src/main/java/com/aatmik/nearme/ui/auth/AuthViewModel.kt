@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aatmik.nearme.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,7 +62,7 @@ class AuthViewModel @Inject constructor(
             _isLoading.value = true
 
             try {
-                val user = authRepository.firebaseAuth.signInWithCredential(credential).await().user
+                val user = FirebaseAuth.getInstance().signInWithCredential(credential).await().user
                 if (user != null) {
                     _authResult.value = Result.success(user.uid)
                 } else {

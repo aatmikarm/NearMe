@@ -35,7 +35,7 @@ class LocationRepository @Inject constructor(
         // Create location document data
         val locationData = hashMapOf(
             "uid" to userLocation.userId,
-            "displayName" to userProfile?.displayName ?: "",
+            h"displayName" to userProfile?.displayName ?: "",
             "primaryPhotoUrl" to userProfile?.photos?.firstOrNull { it.isPrimary }?.url ?: "",
             "currentLocation" to hashMapOf(
                 "geohash" to userLocation.geohash,

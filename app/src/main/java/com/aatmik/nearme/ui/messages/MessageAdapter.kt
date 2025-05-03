@@ -1,3 +1,4 @@
+// MessageAdapter.kt
 package com.aatmik.nearme.ui.messages
 
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ItemMessageReceivedBinding
 import com.aatmik.nearme.databinding.ItemMessageSentBinding
+import com.aatmik.nearme.model.Message
 import com.aatmik.nearme.util.DateTimeUtil
 import com.google.firebase.auth.FirebaseAuth
 
