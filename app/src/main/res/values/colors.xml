@@ -3,4 +3,15 @@
     <color name="colorPrimary">#FF5E3A</color>
     <color name="colorPrimaryDark">#E53935</color>
     <color name="colorAccent">#2196F3</color>
+
+
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="grey_700">#616161</color>
+    <color name="chip_background">#F5F5F5</color>
+    <color name="instagram_purple">#833AB4</color>
+    <color name="premium_gold">#FFD700</color>
+    <color name="error_red">#F44336</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>

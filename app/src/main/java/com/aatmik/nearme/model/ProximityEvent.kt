@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ProximityEvent(
     val id: String = "",
-    val users: List<String>, // UIDs of users involved
-    val distance: Double, // Distance in meters
-    val startTime: Long, // When proximity began
-    val endTime: Long? = null, // When proximity ended (null if ongoing)
-    val location: ProximityLocation,
-    val status: String = "active", // "active", "ended", "matched", "ignored"
+    val users: List<String> = emptyList(), // Add default value
+    val distance: Double = 0.0, // Add default value
+    val startTime: Long = 0, // Add default value
+    val endTime: Long? = null,
+    val location: ProximityLocation = ProximityLocation(), // Add default value
+    val status: String = "active",
     val notificationSent: Boolean = false,
-    val viewedBy: List<String> = emptyList() // Which users have viewed this event
+    val viewedBy: List<String> = emptyList()
 ) : Parcelable

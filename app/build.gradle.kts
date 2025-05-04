@@ -92,8 +92,8 @@ dependencies {
 
     // Image Loading
     implementation(libs.glide)
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.google.firebase.firestore)
-    kapt(libs.glide.compiler)
 
     // Dependency Injection
     implementation(libs.hilt.android)

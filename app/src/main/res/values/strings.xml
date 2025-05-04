@@ -91,4 +91,21 @@
     <string name="show_me">Show Me</string>
     <string name="reset">Reset</string>
     <string name="apply">Apply</string>
+
+    <!-- New Profile UI Strings -->
+    <string name="edit_photos">Edit Photos</string>
+    <string name="verified">Verified</string>
+    <string name="location">Location</string>
+    <string name="profile_completion">Profile Completion</string>
+    <string name="about_me">About Me</string>
+    <string name="visible">Visible</string>
+    <string name="privacy_and_location">Privacy &amp; Location</string>
+    <string name="location_sharing">Location Sharing</string>
+    <string name="ghost_mode">Ghost Mode</string>
+    <string name="proximity_range">Proximity Range</string>
+    <string name="activity">Activity</string>
+    <string name="proximity_events">Proximity Events</string>
+    <string name="premium_feature">Premium Feature</string>
+    <string name="profile_views">Profile Views</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -5,40 +5,48 @@
     android:id="@+id/card_user"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Profile Image - Now rectangular and on the left side -->
         <ImageView
             android:id="@+id/iv_user_photo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:contentDescription="@string/profile_photo"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <View
+        <!-- User info -->
+        <TextView
+            android:id="@+id/tv_name_age"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/gradient_black_transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
-            app:layout_constraintEnd_toEndOf="@+id/iv_user_photo"
-            app:layout_constraintStart_toStartOf="@+id/iv_user_photo"
-            app:layout_constraintTop_toTopOf="@+id/tv_distance" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Alice, 25" />
 
         <TextView
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/bg_distance_chip"
             android:paddingStart="8dp"
             android:paddingTop="4dp"
@@ -46,33 +54,39 @@
             android:paddingBottom="4dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name_age"
             tools:text="150m away" />
 
         <TextView
-            android:id="@+id/tv_name_age"
+            android:id="@+id/tv_bio_preview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
-            app:layout_constraintEnd_toStartOf="@+id/tv_distance"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Alice, 25" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_distance"
+            tools:text="I enjoy hiking, reading books, and traveling to new places." />
 
+        <!-- Action buttons -->
         <LinearLayout
             android:id="@+id/layout_actions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal"
-            android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_user_photo">
+            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_bio_preview">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_skip"

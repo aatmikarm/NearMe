@@ -54,7 +54,7 @@ class NearbyFragment : Fragment() {
         )
 
         binding.rvNearbyUsers.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
             adapter = nearbyAdapter
         }
     }

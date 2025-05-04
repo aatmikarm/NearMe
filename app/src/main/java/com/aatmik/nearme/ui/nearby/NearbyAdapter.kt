@@ -60,6 +60,9 @@ class NearbyAdapter(
             binding.tvNameAge.text = "${user.name}, ${user.age}"
             binding.tvDistance.text = formatDistance(user.distance)
 
+            // Add this line to display bio preview
+            binding.tvBioPreview.text = user.bio
+
             // Load profile photo
             Glide.with(binding.ivUserPhoto.context)
                 .load(user.photoUrl)
