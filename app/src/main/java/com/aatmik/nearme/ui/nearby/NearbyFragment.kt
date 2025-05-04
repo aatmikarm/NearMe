@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aatmik.nearme.databinding.FragmentNearbyBinding
+import com.aatmik.nearme.ui.matches.MatchConfirmationActivity
 import com.aatmik.nearme.ui.nearby.filter.FilterBottomSheetFragment
 import com.aatmik.nearme.ui.profile.UserProfileActivity
 import com.aatmik.nearme.util.showSnackbar
@@ -94,6 +95,45 @@ class NearbyFragment : Fragment() {
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 binding.root.showSnackbar(it)
+            }
+        }
+
+        // Observe connect result
+        viewModel.connectResult.observe(viewLifecycleOwner) { result ->
+            result?.let {
+                if (it.isSuccess) {
+                    val matchId = it.getOrNull()
+                    if (matchId != null) {
+                        // Show success message
+                        binding.root.showSnackbar("Successfully connected!")
+
+                        // Optionally navigate to match confirmation
+                        val intent = MatchConfirmationActivity.createIntent(requireContext(), matchId)
+                        startActivity(intent)
+                    }
+                } else {
+                    binding.root.showSnackbar("Failed to connect: ${it.exceptionOrNull()?.message}")
+                }
+            }
+        }
+
+        // Observe skip result
+        viewModel.skipResult.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                binding.root.showSnackbar("User skipped")
+            }
+        }
+
+
+        // Observe matchToShow
+        viewModel.matchToShow.observe(viewLifecycleOwner) { match ->
+            match?.let {
+                // Navigate to match confirmation
+                val intent = MatchConfirmationActivity.createIntent(requireContext(), it.id)
+                startActivity(intent)
+
+                // Clear the notification so it doesn't show again
+                viewModel.clearMatchNotification()
             }
         }
     }

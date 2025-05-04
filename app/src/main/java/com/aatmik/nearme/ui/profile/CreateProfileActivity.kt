@@ -12,6 +12,7 @@ import com.aatmik.nearme.databinding.ActivityCreateProfileBinding
 import com.aatmik.nearme.model.UserPhoto
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.ui.main.MainActivity
+import com.aatmik.nearme.util.ImageCompressor
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
@@ -25,11 +26,25 @@ class CreateProfileActivity : AppCompatActivity() {
     private var selectedPhotoUri: Uri? = null
 
     // Photo picker launcher
+    // Update the photo selection in CreateProfileActivity.kt
     private val photoPicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            selectedPhotoUri = it
-            binding.ivProfilePhoto.setImageURI(it)
-            binding.btnAddPhoto.text = "Change Photo"
+            // Compress the image before using it
+            val compressedUri = ImageCompressor.compressImage(this, it)
+
+            if (compressedUri != null) {
+                selectedPhotoUri = compressedUri
+                binding.ivProfilePhoto.setImageURI(compressedUri)
+                binding.btnAddPhoto.text = "Change Photo"
+            } else {
+                // If compression fails, use the original URI
+                selectedPhotoUri = it
+                binding.ivProfilePhoto.setImageURI(it)
+                binding.btnAddPhoto.text = "Change Photo"
+
+                // Inform the user that we'll be using the original image
+                Toast.makeText(this, "Using original image size", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -142,6 +157,7 @@ class CreateProfileActivity : AppCompatActivity() {
         return isValid
     }
 
+    // Update in CreateProfileActivity.kt - in createUserProfile
     private fun createUserProfile() {
         val name = binding.etName.text.toString().trim()
         val age = binding.etAge.text.toString().trim().toInt()

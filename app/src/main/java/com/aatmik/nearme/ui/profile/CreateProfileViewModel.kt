@@ -28,6 +28,7 @@ class CreateProfileViewModel @Inject constructor(
     /**
      * Create profile with photo
      */
+    // Update in CreateProfileViewModel.kt
     fun createProfileWithPhoto(userProfile: UserProfile, photoUri: Uri) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -47,7 +48,7 @@ class CreateProfileViewModel @Inject constructor(
                 val profileCreated = userRepository.createUserProfile(completeProfile)
 
                 if (profileCreated) {
-                    // Upload photo
+                    // Upload photo (already compressed in the Activity)
                     val photo = userRepository.uploadProfilePhoto(userId, photoUri, true)
 
                     if (photo != null) {

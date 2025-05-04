@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ActivityMatchConfirmationBinding
 import com.aatmik.nearme.ui.messages.ChatActivity
+import com.aatmik.nearme.util.loadUserPhoto
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -84,20 +85,17 @@ class MatchConfirmationActivity : AppCompatActivity() {
         // Observe match data
         viewModel.matchUsers.observe(this) { users ->
             users?.let { (currentUser, otherUser) ->
-                // Set current user photo
-                Glide.with(this)
-                    .load(currentUser.photos.firstOrNull { it.isPrimary }?.url)
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person)
-                    .into(binding.ivCurrentUserPhoto)
+                // Set current user photo with our new method
+                binding.ivCurrentUserPhoto.loadUserPhoto(
+                    currentUser.photos.firstOrNull { it.isPrimary }?.url,
+                    currentUser.uid
+                )
 
-                // Set other user photo
-                Glide.with(this)
-                    .load(otherUser.photos.firstOrNull { it.isPrimary }?.url)
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person)
-                    .into(binding.ivOtherUserPhoto)
-
+                // Set other user photo with our new method
+                binding.ivOtherUserPhoto.loadUserPhoto(
+                    otherUser.photos.firstOrNull { it.isPrimary }?.url,
+                    otherUser.uid
+                )
                 // Set text
                 binding.tvMatchText.text = getString(R.string.matched_with_name, otherUser.displayName)
             }

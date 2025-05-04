@@ -3,6 +3,7 @@ package com.aatmik.nearme.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+// Update in Conversation.kt
 @Parcelize
 data class Conversation(
     val id: String = "",
@@ -10,7 +11,8 @@ data class Conversation(
     val participants: List<String> = emptyList(),
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
-    val lastReadBy: Map<String, Long> = emptyMap() // User ID to timestamp
+    val lastReadBy: Map<String, Long> = emptyMap(), // User ID to timestamp
+    var lastMessage: MessagePreview? = null // Added this field
 ) : Parcelable
 
 @Parcelize

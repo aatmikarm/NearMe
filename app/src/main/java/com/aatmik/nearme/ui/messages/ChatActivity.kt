@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ActivityChatBinding
+import com.aatmik.nearme.util.loadUserPhoto
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -98,15 +99,11 @@ class ChatActivity : AppCompatActivity() {
                 // Set title
                 binding.tvName.text = it.displayName
 
-                // Load profile photo
-                val photoUrl = it.photos.firstOrNull { photo -> photo.isPrimary }?.url
-                if (!photoUrl.isNullOrEmpty()) {
-                    Glide.with(this)
-                        .load(photoUrl)
-                        .placeholder(R.drawable.ic_person)
-                        .error(R.drawable.ic_person)
-                        .into(binding.ivProfilePhoto)
-                }
+                // Load profile photo with our new method
+                binding.ivProfilePhoto.loadUserPhoto(
+                    it.photos.firstOrNull { photo -> photo.isPrimary }?.url,
+                    it.uid
+                )
 
                 // Show Instagram button if shared
                 binding.ivInstagram.visibility = if (viewModel.isInstagramShared()) View.VISIBLE else View.GONE

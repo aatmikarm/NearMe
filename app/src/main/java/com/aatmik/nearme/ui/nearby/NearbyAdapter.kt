@@ -1,5 +1,6 @@
 package com.aatmik.nearme.ui.nearby
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ItemNearbyUserBinding
 import com.aatmik.nearme.util.formatDistance
+import com.aatmik.nearme.util.loadUserPhoto
 
 class NearbyAdapter(
     private val onConnectClicked: (String) -> Unit,
@@ -24,6 +26,7 @@ class NearbyAdapter(
         )
         return NearbyUserViewHolder(binding)
     }
+
 
     override fun onBindViewHolder(holder: NearbyUserViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -55,20 +58,17 @@ class NearbyAdapter(
             }
         }
 
+
         fun bind(user: NearbyUserModel) {
+            Log.d("PhotoDebug", "NearbyAdapter - User ID: ${user.userId}, Photo URL: ${user.photoUrl}")
+
             // Set user data
             binding.tvNameAge.text = "${user.name}, ${user.age}"
             binding.tvDistance.text = formatDistance(user.distance)
-
-            // Add this line to display bio preview
             binding.tvBioPreview.text = user.bio
 
-            // Load profile photo
-            Glide.with(binding.ivUserPhoto.context)
-                .load(user.photoUrl)
-                .placeholder(R.drawable.ic_person)
-                .error(R.drawable.ic_person)
-                .into(binding.ivUserPhoto)
+            // Load profile photo with our new method
+            binding.ivUserPhoto.loadUserPhoto(user.photoUrl, user.userId)
         }
     }
 

@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aatmik.nearme.model.Match
 import com.aatmik.nearme.model.ProximityEvent
 import com.aatmik.nearme.model.UserLocation
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.LocationRepository
+import com.aatmik.nearme.repository.MatchRepository
 import com.aatmik.nearme.repository.UserRepository
 import com.aatmik.nearme.util.PreferenceManager
 import com.google.firebase.auth.FirebaseAuth
@@ -21,8 +23,16 @@ import javax.inject.Inject
 class NearbyViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val userRepository: UserRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val matchRepository: MatchRepository
 ) : ViewModel() {
+
+
+    // Add a set to track shown match IDs
+    private val shownMatchIds = mutableSetOf<String>()
+
+    private val _matchToShow = MutableLiveData<Match?>()
+    val matchToShow: LiveData<Match?> = _matchToShow
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -32,6 +42,13 @@ class NearbyViewModel @Inject constructor(
 
     private val _activeProximityEvents = MutableLiveData<List<ProximityEvent>>()
     val activeProximityEvents: LiveData<List<ProximityEvent>> = _activeProximityEvents
+
+    // Also add LiveData fields for the results
+    private val _connectResult = MutableLiveData<Result<String>?>()
+    val connectResult: LiveData<Result<String>?> = _connectResult
+
+    private val _skipResult = MutableLiveData<Boolean>()
+    val skipResult: LiveData<Boolean> = _skipResult
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -114,10 +131,28 @@ class NearbyViewModel @Inject constructor(
                 val events = locationRepository.getActiveProximityEvents(currentUserId)
                 _activeProximityEvents.value = events
 
+                // Check for matches but only show ones we haven't shown before
+                events.forEach { event ->
+                    if (event.status == "matched" && !shownMatchIds.contains(event.id)) {
+                        // Check if there's a match for this event
+                        val match = matchRepository.getMatchByProximityEventId(event.id)
+                        if (match != null) {
+                            _matchToShow.value = match
+                            // Add to shown matches set so we don't show it again
+                            shownMatchIds.add(event.id)
+                            return@forEach
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 _error.value = e.message
             }
         }
+    }
+
+    // Add a method to clear the match notification
+    fun clearMatchNotification() {
+        _matchToShow.value = null
     }
 
     /**
@@ -206,43 +241,71 @@ class NearbyViewModel @Inject constructor(
     /**
      * Handle connect action
      */
+    // Update the connectWithUser method in NearbyViewModel.kt
     fun connectWithUser(userId: String) {
         viewModelScope.launch {
-            // Find active proximity event with this user
-            val currentUserId = userRepository.getCurrentUserId() ?: return@launch
-            val userIds = listOf(currentUserId, userId).sorted()
+            _isLoading.value = true
 
-            val events = _activeProximityEvents.value ?: emptyList()
-            val event = events.firstOrNull { it.users.containsAll(userIds) }
+            try {
+                // Find active proximity event with this user
+                val currentUserId = userRepository.getCurrentUserId() ?: throw Exception("User not authenticated")
+                val userIds = listOf(currentUserId, userId).sorted()
 
-            if (event != null) {
-                // Open proximity match screen
-                // In a real implementation, you'd use LiveData or a callback to notify the UI
-            } else {
-                _error.value = "No active proximity event found"
+                // Look for existing proximity event
+                val events = locationRepository.getActiveProximityEvents(currentUserId)
+                val event = events.firstOrNull { it.users.containsAll(userIds) }
+
+                if (event != null) {
+                    // Create a match with this user
+                    val matchId = matchRepository.createOrUpdateMatch(currentUserId, userId, event.id)
+
+                    // Update event status to matched
+                    locationRepository.updateProximityEventStatus(event.id, "matched")
+
+                    // Refresh lists after matching
+                    loadActiveProximityEvents()
+                    loadNearbyUsers()
+
+                    // Send success message
+                    _connectResult.value = Result.success(matchId)
+                } else {
+                    _connectResult.value = Result.failure(Exception("No active proximity event found"))
+                }
+            } catch (e: Exception) {
+                _connectResult.value = Result.failure(e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    /**
-     * Handle skip action
-     */
+    // Update the skipUser method in NearbyViewModel.kt
     fun skipUser(userId: String) {
         viewModelScope.launch {
-            // Find active proximity event with this user
-            val currentUserId = userRepository.getCurrentUserId() ?: return@launch
-            val userIds = listOf(currentUserId, userId).sorted()
+            try {
+                // Find active proximity event with this user
+                val currentUserId = userRepository.getCurrentUserId() ?: return@launch
+                val userIds = listOf(currentUserId, userId).sorted()
 
-            val events = _activeProximityEvents.value ?: emptyList()
-            val event = events.firstOrNull { it.users.containsAll(userIds) }
+                val events = _activeProximityEvents.value ?: emptyList()
+                val event = events.firstOrNull { it.users.containsAll(userIds) }
 
-            if (event != null) {
-                // Update event status to ignored
-                locationRepository.updateProximityEventStatus(event.id, "ignored")
+                if (event != null) {
+                    // Update event status to ignored
+                    locationRepository.updateProximityEventStatus(event.id, "ignored")
 
-                // Refresh lists
-                loadActiveProximityEvents()
-                loadNearbyUsers()
+                    // Refresh lists
+                    loadActiveProximityEvents()
+                    loadNearbyUsers()
+
+                    // Send success message
+                    _skipResult.value = true
+                } else {
+                    _skipResult.value = false
+                }
+            } catch (e: Exception) {
+                _skipResult.value = false
+                _error.value = e.message
             }
         }
     }

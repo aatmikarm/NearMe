@@ -51,6 +51,26 @@ class MatchRepository @Inject constructor(
         }
     }
 
+    suspend fun getMatchByProximityEventId(proximityEventId: String): Match? {
+        try {
+            val snapshot = matchesCollection
+                .whereEqualTo("proximityEventId", proximityEventId)
+                .limit(1)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents.first()
+                return document.toObject(Match::class.java)?.copy(id = document.id)
+            }
+
+            return null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting match by proximity event ID: $proximityEventId", e)
+            return null
+        }
+    }
+
     /**
      * Get new matches for a user (past 24 hours)
      */

@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.aatmik.nearme.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,6 +19,49 @@ import java.util.*
  */
 fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
+}
+
+// Add this to Extensions.kt
+/**
+ * Load image with a fallback for empty URLs
+ */
+fun ImageView.loadUserPhoto(url: String?, userId: String, placeholder: Int = R.drawable.ic_person) {
+    if (url.isNullOrEmpty()) {
+        // Try to load from other sources or use placeholder
+        val storage = FirebaseStorage.getInstance()
+        val photoRef = storage.reference.child("profile_photos/$userId/original")
+
+        // Try to list files in the user's photos directory
+        photoRef.listAll()
+            .addOnSuccessListener { result ->
+                if (result.items.isNotEmpty()) {
+                    // Get the first photo's download URL
+                    result.items[0].downloadUrl
+                        .addOnSuccessListener { uri ->
+                            Glide.with(this.context)
+                                .load(uri)
+                                .placeholder(placeholder)
+                                .error(placeholder)
+                                .into(this)
+                        }
+                        .addOnFailureListener {
+                            setImageResource(placeholder)
+                        }
+                } else {
+                    setImageResource(placeholder)
+                }
+            }
+            .addOnFailureListener {
+                setImageResource(placeholder)
+            }
+    } else {
+        // URL is not empty, load normally
+        Glide.with(this.context)
+            .load(url)
+            .placeholder(placeholder)
+            .error(placeholder)
+            .into(this)
+    }
 }
 
 /**

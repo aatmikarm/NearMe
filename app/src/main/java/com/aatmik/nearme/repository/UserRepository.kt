@@ -122,6 +122,8 @@ class UserRepository @Inject constructor(
     /**
      * Upload a profile photo
      */
+    // Update in UserRepository.kt
+    // Update in UserRepository.kt
     suspend fun uploadProfilePhoto(userId: String, photoUri: Uri, isPrimary: Boolean = false): UserPhoto? {
         Log.d(TAG, "Uploading profile photo for userId: $userId, isPrimary: $isPrimary")
         val photoId = UUID.randomUUID().toString()
@@ -131,15 +133,19 @@ class UserRepository @Inject constructor(
         try {
             val startTime = System.currentTimeMillis()
 
-            // Upload original photo
+            // Upload original photo (which is now compressed)
             Log.d(TAG, "Uploading original photo to storage")
             photoRef.putFile(photoUri).await()
+
+            // Get the download URL
             val photoUrl = photoRef.downloadUrl.await().toString()
             Log.d(TAG, "Original photo uploaded, URL: $photoUrl")
 
-            // Upload thumbnail (in a real app, you'd resize the image first)
+            // For thumbnail, we can use the same compressed image since it's already small
             Log.d(TAG, "Uploading thumbnail photo to storage")
             thumbnailRef.putFile(photoUri).await()
+
+            // Get the thumbnail download URL
             val thumbnailUrl = thumbnailRef.downloadUrl.await().toString()
             Log.d(TAG, "Thumbnail uploaded, URL: $thumbnailUrl")
 
@@ -160,8 +166,10 @@ class UserRepository @Inject constructor(
             // If this is primary, set all others to non-primary
             if (isPrimary) {
                 Log.d(TAG, "Setting other photos to non-primary")
-                updatedPhotos.forEach { photo ->
-                    photo.copy(isPrimary = false)
+                for (i in 0 until updatedPhotos.size) {
+                    if (updatedPhotos[i].isPrimary) {
+                        updatedPhotos[i] = updatedPhotos[i].copy(isPrimary = false)
+                    }
                 }
             }
 
@@ -172,7 +180,7 @@ class UserRepository @Inject constructor(
             // Update Firestore
             Log.d(TAG, "Updating user document with new photo list")
             usersCollection.document(userId)
-                .update("profile.photos", updatedPhotos)
+                .update("photos", updatedPhotos)
                 .await()
 
             val duration = System.currentTimeMillis() - startTime
@@ -182,9 +190,7 @@ class UserRepository @Inject constructor(
             Log.e(TAG, "Error uploading profile photo for userId: $userId", e)
             return null
         }
-    }
-
-    /**
+    } /**
      * Delete a profile photo
      */
     suspend fun deleteProfilePhoto(userId: String, photoId: String): Boolean {
