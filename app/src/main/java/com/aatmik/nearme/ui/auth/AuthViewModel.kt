@@ -1,6 +1,7 @@
 package com.aatmik.nearme.ui.auth
 
 import android.app.Activity
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
+
+    private val TAG = "AuthViewModel"
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -41,6 +44,9 @@ class AuthViewModel @Inject constructor(
         _isLoading.value = true
         phoneNumber = phone
 
+        // Log the phone number for debugging
+        Log.d(TAG, "Sending verification code to: $phoneNumber")
+
         authRepository.sendVerificationCode(
             activity,
             phoneNumber = phone,
@@ -52,10 +58,12 @@ class AuthViewModel @Inject constructor(
             onVerificationFailed = { exception ->
                 _isLoading.value = false
                 _verificationError.value = exception
+                Log.e(TAG, "Verification failed: ${exception.message}", exception)
             },
             onCodeSent = { _ ->
                 _isLoading.value = false
                 _verificationSent.value = true
+                Log.d(TAG, "Verification code sent to: $phoneNumber")
             }
         )
     }
@@ -68,11 +76,14 @@ class AuthViewModel @Inject constructor(
                 val user = FirebaseAuth.getInstance().signInWithCredential(credential).await().user
                 if (user != null) {
                     _authResult.value = Result.success(user.uid)
+                    Log.d(TAG, "Authentication successful for user: ${user.uid}")
                 } else {
                     _authResult.value = Result.failure(Exception("Authentication failed"))
+                    Log.e(TAG, "Authentication failed: user is null")
                 }
             } catch (e: Exception) {
                 _authResult.value = Result.failure(e)
+                Log.e(TAG, "Authentication failed: ${e.message}", e)
             } finally {
                 _isLoading.value = false
             }
@@ -82,6 +93,8 @@ class AuthViewModel @Inject constructor(
     fun verifyCode(code: String) {
         viewModelScope.launch {
             _isLoading.value = true
+            Log.d(TAG, "Verifying code: $code")
+
             _authResult.value = authRepository.verifyCode(code)
             _isLoading.value = false
         }
@@ -90,8 +103,12 @@ class AuthViewModel @Inject constructor(
     fun checkUserProfileExists() {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId() ?: return@launch
+            Log.d(TAG, "Checking if profile exists for user: $userId")
+
             val exists = authRepository.checkUserProfileExists(userId)
             _userProfileExists.value = exists
+
+            Log.d(TAG, "Profile exists: $exists")
         }
     }
 }

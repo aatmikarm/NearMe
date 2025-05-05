@@ -118,4 +118,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //country code picker
+    implementation("com.hbb20:ccp:2.7.2")
 }

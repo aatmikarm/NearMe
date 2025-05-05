@@ -5,15 +5,32 @@ package com.aatmik.nearme.util
  */
 object ValidationUtil {
 
-    private val PHONE_REGEX = Regex("^\\+?[0-9]{10,15}$")
+    // Updated phone regex to support international formats with country code
+    private val PHONE_REGEX = Regex("^\\+[0-9]{1,4}[0-9]{6,14}$")
     private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
     private val PASSWORD_REGEX = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
 
     /**
-     * Validate phone number
+     * Validate phone number with country code
      */
     fun isValidPhoneNumber(phone: String): Boolean {
         return phone.isNotEmpty() && PHONE_REGEX.matches(phone)
+    }
+
+    /**
+     * Validate phone number for specific country
+     */
+    fun isValidCountryPhoneNumber(phone: String, countryCode: String): Boolean {
+        // For India (+91)
+        if (countryCode == "+91") {
+            // Remove country code if present
+            val localNumber = if (phone.startsWith("+91")) phone.substring(3) else phone
+            // Indian numbers are 10 digits starting with 6, 7, 8, or 9
+            return localNumber.matches(Regex("^[6-9][0-9]{9}$"))
+        }
+
+        // For other countries, use general validation
+        return isValidPhoneNumber(phone)
     }
 
     /**

@@ -26,7 +26,11 @@
     <string name="verification_code">Verification Code</string>
     <string name="verify_code">Verify Code</string>
     <string name="resend_code">Resend Code</string>
-    <string name="resend_in_seconds">Resend in 60s</string>
+    <string name="resend_in_seconds">Resend in %1$d seconds</string>
+    <string name="country_code">Country Code</string>
+    <string name="please_enter_valid_phone">Please enter a valid phone number</string>
+    <string name="verification_code_sent">Verification code sent</string>
+    <string name="verification_failed">Verification failed: %1$s</string>
 
     <!-- Profile Creation -->
     <string name="create_profile">Create Your Profile</string>
