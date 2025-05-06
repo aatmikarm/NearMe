@@ -124,7 +124,6 @@ class NearbyFragment : Fragment() {
             }
         }
 
-
         // Observe matchToShow
         viewModel.matchToShow.observe(viewLifecycleOwner) { match ->
             match?.let {
@@ -136,6 +135,20 @@ class NearbyFragment : Fragment() {
                 viewModel.clearMatchNotification()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh data when returning to the fragment
+        viewModel.loadNearbyUsers()
+        viewModel.loadActiveProximityEvents()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Reset the session flag when fragment is destroyed
+        viewModel.onFragmentDestroyed()
+        _binding = null
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {
@@ -151,10 +164,5 @@ class NearbyFragment : Fragment() {
     private fun openFilterBottomSheet() {
         val filterBottomSheet = FilterBottomSheetFragment()
         filterBottomSheet.show(childFragmentManager, FilterBottomSheetFragment.TAG)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

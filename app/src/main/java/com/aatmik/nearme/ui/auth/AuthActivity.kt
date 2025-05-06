@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +35,9 @@ class AuthActivity : AppCompatActivity() {
     // CountDownTimer for resend button
     private var countDownTimer: CountDownTimer? = null
 
+    // Array to store OTP input fields
+    private lateinit var otpFields: Array<EditText>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,21 +48,83 @@ class AuthActivity : AppCompatActivity() {
         binding.ccp.setDefaultCountryUsingNameCode("IN")
         binding.ccp.resetToDefaultCountry()
 
+        // Initialize OTP fields array
+        otpFields = arrayOf(
+            binding.etOtp1,
+            binding.etOtp2,
+            binding.etOtp3,
+            binding.etOtp4,
+            binding.etOtp5,
+            binding.etOtp6
+        )
+
+        setupOtpFieldsLogic()
         setupListeners()
         observeViewModel()
         setFocusToPhoneNumberField()
     }
 
     private fun setFocusToPhoneNumberField() {
-
         lifecycleScope.launch(Dispatchers.Main) {
             delay(500)
             binding.etPhoneNumber.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etPhoneNumber, InputMethodManager.SHOW_IMPLICIT)
         }
+    }
 
+    private fun setupOtpFieldsLogic() {
+        // Add text watchers to each OTP field
+        for (i in otpFields.indices) {
+            // Text change listener
+            otpFields[i].addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // If text is entered, move to next field
+                    if (s?.length == 1 && i < otpFields.size - 1) {
+                        otpFields[i + 1].requestFocus()
+                    }
+
+                    // Update the verification code field (for backward compatibility)
+                    updateVerificationCodeField()
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
+            // Handle backspace key to move to previous field
+            otpFields[i].setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
+                    if (otpFields[i].text.isEmpty() && i > 0) {
+                        otpFields[i - 1].text = null
+                        otpFields[i - 1].requestFocus()
+                        return@setOnKeyListener true
+                    }
+                }
+                false
+            }
+        }
+
+        // Set keyboard action for the last OTP field
+        otpFields.last().setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                verifyOtp()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun updateVerificationCodeField() {
+        // Combine all OTP fields into one string
+        val otp = otpFields.joinToString("") { it.text.toString() }
+        binding.etVerificationCode.setText(otp)
+    }
+
+    private fun getOtpCode(): String {
+        return otpFields.joinToString("") { it.text.toString() }
     }
 
     private fun setupListeners() {
@@ -66,34 +134,14 @@ class AuthActivity : AppCompatActivity() {
                 actionId == EditorInfo.IME_ACTION_NEXT ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
             ) {
-
                 // Same action as send code button
                 val phoneNumber = getFullPhoneNumber()
                 if (phoneNumber.isNotEmpty()) {
                     viewModel.sendVerificationCode(this, phoneNumber)
-                    showVerificationCodeLayout()
+                    showVerificationCodeLayout(phoneNumber)
                     return@setOnEditorActionListener true
                 } else {
                     Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-            false
-        }
-
-        // Also set up keyboard action listener for verification code field
-        binding.etVerificationCode.setOnEditorActionListener { _, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
-            ) {
-
-                // Same action as verify code button
-                val code = binding.etVerificationCode.text.toString().trim()
-                if (code.isNotEmpty()) {
-                    viewModel.verifyCode(code)
-                    return@setOnEditorActionListener true
-                } else {
-                    Toast.makeText(this, "Please enter verification code", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -105,7 +153,7 @@ class AuthActivity : AppCompatActivity() {
             val phoneNumber = getFullPhoneNumber()
             if (phoneNumber.isNotEmpty()) {
                 viewModel.sendVerificationCode(this, phoneNumber)
-                showVerificationCodeLayout()
+                showVerificationCodeLayout(phoneNumber)
             } else {
                 Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show()
             }
@@ -113,12 +161,7 @@ class AuthActivity : AppCompatActivity() {
 
         // Verify code button
         binding.btnVerifyCode.setOnClickListener {
-            val code = binding.etVerificationCode.text.toString().trim()
-            if (code.isNotEmpty()) {
-                viewModel.verifyCode(code)
-            } else {
-                Toast.makeText(this, "Please enter verification code", Toast.LENGTH_SHORT).show()
-            }
+            verifyOtp()
         }
 
         // Resend code button
@@ -130,6 +173,15 @@ class AuthActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun verifyOtp() {
+        val otp = getOtpCode()
+        if (otp.length == 6) {
+            viewModel.verifyCode(otp)
+        } else {
+            Toast.makeText(this, "Please enter the 6-digit verification code", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -224,18 +276,20 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showVerificationCodeLayout() {
+    private fun showVerificationCodeLayout(phoneNumber: String) {
         binding.layoutPhoneNumber.visibility = View.GONE
         binding.layoutVerificationCode.visibility = View.VISIBLE
+        binding.tvPhoneDisplay.text = phoneNumber
 
+        // Clear all OTP fields
+        otpFields.forEach { it.text = null }
 
-        // Request focus on verification code field and show keyboard
-        binding.etVerificationCode.requestFocus()
+        // Request focus on first OTP field
+        otpFields[0].requestFocus()
 
-        // Optional: Show keyboard automatically
+        // Show keyboard automatically
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(binding.etVerificationCode, InputMethodManager.SHOW_IMPLICIT)
-
+        imm.showSoftInput(otpFields[0], InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun startResendTimer() {
@@ -245,16 +299,18 @@ class AuthActivity : AppCompatActivity() {
         // Start a countdown timer for resend button
         binding.btnResendCode.isEnabled = false
         binding.tvResendTimer.visibility = View.VISIBLE
+        binding.btnResendCode.visibility = View.GONE
 
         countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                binding.tvResendTimer.text = "Resend in ${secondsRemaining}s"
+                binding.tvResendTimer.text = getString(R.string.resend_in_seconds, secondsRemaining)
             }
 
             override fun onFinish() {
                 binding.btnResendCode.isEnabled = true
                 binding.tvResendTimer.visibility = View.GONE
+                binding.btnResendCode.visibility = View.VISIBLE
             }
         }.start()
     }

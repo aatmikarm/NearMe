@@ -4,132 +4,258 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="@color/white"
+    android:padding="24dp"
     tools:context=".ui.auth.AuthActivity">
 
+    <!-- App Logo -->
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:contentDescription="@string/app_logo"
         android:src="@drawable/ic_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- App Name -->
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/verify_phone"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
 
-    <TextView
-        android:id="@+id/tv_subtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/verify_phone_description"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
+    <!-- Phone Number Input Layout -->
     <LinearLayout
         android:id="@+id/layout_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_subtitle">
+        app:layout_constraintTop_toBottomOf="@+id/tv_app_name">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_phone_number"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/text_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input_field"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Country Code Picker -->
+            <!-- Country Code Picker with minimalist style -->
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:ccp_defaultNameCode="IN"
-                app:ccp_showFullName="false"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:ccp_showNameCode="true"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                app:ccp_autoDetectCountry="false"
+                app:ccp_contentColor="@color/text_dark"
+                app:ccp_defaultNameCode="IN"
                 app:ccp_showFlag="true"
-                app:ccp_autoDetectCountry="false" />
+                app:ccp_showNameCode="false"
+                app:ccp_textSize="16sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="12dp"
+                android:background="@color/divider_color" />
+
+            <EditText
+                android:id="@+id/et_phone_number"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="@string/phone_number">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_phone_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:imeOptions="actionNext" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@null"
+                android:hint="@string/phone_number_hint"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_phone_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/phone_verify_info"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/btn_send_code"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/send_verification_code" />
-
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
     </LinearLayout>
 
+    <!-- OTP Verification Layout (Initially Hidden) -->
     <LinearLayout
         android:id="@+id/layout_verification_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_app_name"
         tools:visibility="visible">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/verification_code">
+            android:text="@string/verification_code_title"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/text_gray" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_verification_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/tv_phone_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/text_dark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/enter_6_digit_code"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+
+        <!-- OTP Input Fields -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_otp_1"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
                 android:inputType="number"
-                android:maxLength="6"
-                android:imeOptions="actionDone" />
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/et_otp_2"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_otp_3"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_otp_4"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_otp_5"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_otp_6"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_verify_code"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/verify_code" />
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="@string/verify"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <!-- Hidden field for backward compatibility - will still be in the code but not visible in UI -->
+        <EditText
+            android:id="@+id/et_verification_code"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -139,21 +265,35 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/didnt_receive_code"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/tv_resend_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="@string/resend_in_seconds"
-                android:visibility="gone" />
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:visibility="visible" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_resend_code"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/resend_code" />
-
+                android:layout_marginStart="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/resend_code"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
         </LinearLayout>
-
     </LinearLayout>
 
     <ProgressBar

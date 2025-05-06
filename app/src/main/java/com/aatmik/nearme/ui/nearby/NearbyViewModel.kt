@@ -1,3 +1,5 @@
+// Located at app/src/main/java/com/aatmik/nearme/ui/nearby/NearbyViewModel.kt
+
 package com.aatmik.nearme.ui.nearby
 
 import androidx.lifecycle.LiveData
@@ -27,9 +29,11 @@ class NearbyViewModel @Inject constructor(
     private val matchRepository: MatchRepository
 ) : ViewModel() {
 
-
     // Add a set to track shown match IDs
     private val shownMatchIds = mutableSetOf<String>()
+
+    // Add a flag to prevent showing matches when returning to fragment
+    private var hasShownMatchOnCurrentSession = false
 
     private val _matchToShow = MutableLiveData<Match?>()
     val matchToShow: LiveData<Match?> = _matchToShow
@@ -132,15 +136,20 @@ class NearbyViewModel @Inject constructor(
                 _activeProximityEvents.value = events
 
                 // Check for matches but only show ones we haven't shown before
-                events.forEach { event ->
-                    if (event.status == "matched" && !shownMatchIds.contains(event.id)) {
-                        // Check if there's a match for this event
-                        val match = matchRepository.getMatchByProximityEventId(event.id)
-                        if (match != null) {
-                            _matchToShow.value = match
-                            // Add to shown matches set so we don't show it again
-                            shownMatchIds.add(event.id)
-                            return@forEach
+                // AND only if we're not returning to the fragment
+                if (!hasShownMatchOnCurrentSession) {
+                    events.forEach { event ->
+                        if (event.status == "matched" && !shownMatchIds.contains(event.id)) {
+                            // Check if there's a match for this event
+                            val match = matchRepository.getMatchByProximityEventId(event.id)
+                            if (match != null) {
+                                _matchToShow.value = match
+                                // Add to shown matches set so we don't show it again
+                                shownMatchIds.add(event.id)
+                                // Set the flag to prevent showing matches on fragment return
+                                hasShownMatchOnCurrentSession = true
+                                return@forEach
+                            }
                         }
                     }
                 }
@@ -148,6 +157,11 @@ class NearbyViewModel @Inject constructor(
                 _error.value = e.message
             }
         }
+    }
+
+    // Add a method to reset session flag when fragment is destroyed
+    fun onFragmentDestroyed() {
+        hasShownMatchOnCurrentSession = false
     }
 
     // Add a method to clear the match notification
@@ -241,7 +255,6 @@ class NearbyViewModel @Inject constructor(
     /**
      * Handle connect action
      */
-    // Update the connectWithUser method in NearbyViewModel.kt
     fun connectWithUser(userId: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -262,6 +275,12 @@ class NearbyViewModel @Inject constructor(
                     // Update event status to matched
                     locationRepository.updateProximityEventStatus(event.id, "matched")
 
+                    // Add to shown matches set so we don't show it again
+                    shownMatchIds.add(event.id)
+
+                    // Set the flag to prevent showing matches on fragment return
+                    hasShownMatchOnCurrentSession = true
+
                     // Refresh lists after matching
                     loadActiveProximityEvents()
                     loadNearbyUsers()
@@ -279,7 +298,6 @@ class NearbyViewModel @Inject constructor(
         }
     }
 
-    // Update the skipUser method in NearbyViewModel.kt
     fun skipUser(userId: String) {
         viewModelScope.launch {
             try {
