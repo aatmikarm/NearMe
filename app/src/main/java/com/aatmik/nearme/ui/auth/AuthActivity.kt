@@ -1,18 +1,26 @@
 package com.aatmik.nearme.ui.auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ActivityAuthBinding
 import com.aatmik.nearme.ui.main.MainActivity
 import com.aatmik.nearme.ui.profile.CreateProfileActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
@@ -36,9 +44,62 @@ class AuthActivity : AppCompatActivity() {
 
         setupListeners()
         observeViewModel()
+        setFocusToPhoneNumberField()
+    }
+
+    private fun setFocusToPhoneNumberField() {
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            binding.etPhoneNumber.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etPhoneNumber, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+
     }
 
     private fun setupListeners() {
+        // Set up keyboard action listener for phone number field
+        binding.etPhoneNumber.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                actionId == EditorInfo.IME_ACTION_NEXT ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
+
+                // Same action as send code button
+                val phoneNumber = getFullPhoneNumber()
+                if (phoneNumber.isNotEmpty()) {
+                    viewModel.sendVerificationCode(this, phoneNumber)
+                    showVerificationCodeLayout()
+                    return@setOnEditorActionListener true
+                } else {
+                    Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            false
+        }
+
+        // Also set up keyboard action listener for verification code field
+        binding.etVerificationCode.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
+
+                // Same action as verify code button
+                val code = binding.etVerificationCode.text.toString().trim()
+                if (code.isNotEmpty()) {
+                    viewModel.verifyCode(code)
+                    return@setOnEditorActionListener true
+                } else {
+                    Toast.makeText(this, "Please enter verification code", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            false
+        }
+
         // Send verification code button
         binding.btnSendCode.setOnClickListener {
             val phoneNumber = getFullPhoneNumber()
@@ -96,7 +157,11 @@ class AuthActivity : AppCompatActivity() {
             // Indian mobile numbers are 10 digits and start with 6, 7, 8, or 9
             val isValidIndianNumber = cleanPhoneNumber.matches(Regex("^[6-9][0-9]{9}$"))
             if (!isValidIndianNumber) {
-                Toast.makeText(this, "Please enter a valid 10-digit Indian mobile number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please enter a valid 10-digit Indian mobile number",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return ""
             }
         }
@@ -138,7 +203,11 @@ class AuthActivity : AppCompatActivity() {
                     // Check if user profile exists
                     viewModel.checkUserProfileExists()
                 } else {
-                    Toast.makeText(this, "Verification failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "Verification failed: ${result.exceptionOrNull()?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -158,6 +227,15 @@ class AuthActivity : AppCompatActivity() {
     private fun showVerificationCodeLayout() {
         binding.layoutPhoneNumber.visibility = View.GONE
         binding.layoutVerificationCode.visibility = View.VISIBLE
+
+
+        // Request focus on verification code field and show keyboard
+        binding.etVerificationCode.requestFocus()
+
+        // Optional: Show keyboard automatically
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etVerificationCode, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     private fun startResendTimer() {
