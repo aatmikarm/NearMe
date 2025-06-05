@@ -17,4 +17,5 @@ local.properties
 # Add these lines to protect your keystore information
 *.keystore
 *.jks
+keystore.propertiesgoogle-services.json
 keystore.properties
