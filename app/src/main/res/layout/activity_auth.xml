@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textAppearance="@style/TextAppearance.NearMe.Headline"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/enter_phone_number"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="@color/text_gray" />
+            android:textAppearance="@style/TextAppearance.NearMe.Body"
+            android:textColor="@color/text_dark" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/verification_code_title"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textAppearance="@style/TextAppearance.NearMe.Body"
             android:textColor="@color/text_gray" />
 
         <TextView
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text=""
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textAppearance="@style/TextAppearance.NearMe.Subtitle1"
             android:textColor="@color/text_dark"
             android:textStyle="bold" />
 
@@ -163,8 +163,9 @@
 
             <EditText
                 android:id="@+id/et_otp_1"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_weight="1"
                 android:layout_margin="4dp"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
@@ -176,9 +177,10 @@
 
             <EditText
                 android:id="@+id/et_otp_2"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_margin="4dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
@@ -189,8 +191,9 @@
 
             <EditText
                 android:id="@+id/et_otp_3"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_weight="1"
                 android:layout_margin="4dp"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
@@ -202,7 +205,8 @@
 
             <EditText
                 android:id="@+id/et_otp_4"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
                 android:layout_height="56dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/bg_otp_box"
@@ -215,8 +219,9 @@
 
             <EditText
                 android:id="@+id/et_otp_5"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_weight="1"
                 android:layout_margin="4dp"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
@@ -228,9 +233,10 @@
 
             <EditText
                 android:id="@+id/et_otp_6"
-                android:layout_width="48dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_margin="4dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
@@ -299,12 +305,13 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_verification_code"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

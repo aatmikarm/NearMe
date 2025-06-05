@@ -28,8 +28,7 @@
         <!-- SplashActivity should be the launcher -->
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.NearMe.Splash">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

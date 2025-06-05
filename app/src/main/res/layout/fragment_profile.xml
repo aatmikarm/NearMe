@@ -136,7 +136,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                            android:textAppearance="@style/TextAppearance.NearMe.Headline"
                             android:textStyle="bold"
                             tools:text="Alice, 25" />
 
@@ -171,7 +171,7 @@
                             android:id="@+id/tv_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                            android:textAppearance="@style/TextAppearance.NearMe.Body"
                             android:textColor="@color/colorAccent"
                             tools:text="Ajmer, Rajasthan" />
 
@@ -194,14 +194,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/profile_completion"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_completion_percentage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body"
                                 android:textStyle="bold"
                                 tools:text="75%" />
                         </LinearLayout>
@@ -223,7 +223,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/about_me"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                         android:textStyle="bold" />
 
                     <TextView
@@ -231,7 +231,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Body"
+                        android:textColor="@color/text_gray"
                         tools:text="Hello, I'm Alice. I enjoy hiking, reading, and meeting new people. Looking for meaningful connections with like-minded individuals." />
 
                 </LinearLayout>
@@ -255,7 +256,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/interests"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                         android:textStyle="bold" />
 
                     <com.google.android.material.chip.ChipGroup
@@ -315,7 +316,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/instagram"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                             android:textStyle="bold" />
 
                         <View
@@ -354,7 +355,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:textAppearance="@style/TextAppearance.NearMe.Body"
                             android:textStyle="bold"
                             tools:text="\@username" />
 
@@ -392,7 +393,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/privacy_and_location"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                         android:textStyle="bold" />
 
                     <!-- Location Sharing Toggle -->
@@ -416,7 +417,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/location_sharing"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                            android:textAppearance="@style/TextAppearance.NearMe.Body" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switch_location_sharing"
@@ -446,7 +447,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/ghost_mode"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                            android:textAppearance="@style/TextAppearance.NearMe.Body" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switch_ghost_mode"
@@ -461,7 +462,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/proximity_range"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textAppearance="@style/TextAppearance.NearMe.Body"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -475,7 +476,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="10m"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                            android:textAppearance="@style/TextAppearance.NearMe.Caption"
                             android:textColor="@color/grey_700"
                             tools:ignore="HardcodedText" />
 
@@ -492,7 +493,7 @@
                             android:id="@+id/tv_proximity_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                            android:textAppearance="@style/TextAppearance.NearMe.Caption"
                             android:textColor="@color/grey_700"
                             tools:text="100m" />
                     </LinearLayout>
@@ -517,7 +518,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/activity"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -538,7 +539,7 @@
                                 android:id="@+id/tv_matches_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                                android:textAppearance="@style/TextAppearance.NearMe.Headline"
                                 android:textColor="@color/colorPrimary"
                                 android:textStyle="bold"
                                 tools:text="12" />
@@ -547,7 +548,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/matches"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                                android:textAppearance="@style/TextAppearance.NearMe.Caption" />
                         </LinearLayout>
 
                         <!-- Divider -->
@@ -568,7 +569,7 @@
                                 android:id="@+id/tv_proximity_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                                android:textAppearance="@style/TextAppearance.NearMe.Headline"
                                 android:textColor="@color/colorPrimary"
                                 android:textStyle="bold"
                                 tools:text="38" />
@@ -577,7 +578,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/proximity_events"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                                android:textAppearance="@style/TextAppearance.NearMe.Caption" />
                         </LinearLayout>
 
                         <!-- Divider -->
@@ -603,7 +604,7 @@
                                     android:id="@+id/tv_views_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Headline"
                                     android:textColor="@color/colorPrimary"
                                     android:textStyle="bold"
                                     tools:text="84" />
@@ -623,7 +624,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_views"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                                android:textAppearance="@style/TextAppearance.NearMe.Caption"
+                                android:textColor="@color/text_gray" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -638,6 +640,7 @@
                 android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/premium_gold"
                 android:text="@string/upgrade_to_premium"
+                android:textAppearance="@style/TextAppearance.NearMe.Button"
                 android:textColor="@color/white"
                 app:icon="@drawable/ic_premium"
                 app:iconGravity="textStart"
@@ -650,6 +653,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="@string/settings"
+                android:textAppearance="@style/TextAppearance.NearMe.Button"
                 app:icon="@drawable/ic_settings"
                 app:iconGravity="textStart" />
 
