@@ -12,7 +12,7 @@ data class Conversation(
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
     val lastReadBy: Map<String, Long> = emptyMap(), // User ID to timestamp
-    var lastMessage: MessagePreview? = null // Added this field.
+    var lastMessage: MessagePreview? = null // Prakriti Added this field
 ) : Parcelable
 
 @Parcelize
