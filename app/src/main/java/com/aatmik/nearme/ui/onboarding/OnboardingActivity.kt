@@ -17,8 +17,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOnboardingBinding
 
-    @Inject
-    lateinit var preferenceManager: PreferenceManager
+    @Inject lateinit var preferenceManager: PreferenceManager
 
     private lateinit var adapter: OnboardingPagerAdapter
 
@@ -35,22 +34,22 @@ class OnboardingActivity : AppCompatActivity() {
         adapter = OnboardingPagerAdapter(this)
         binding.viewPager.adapter = adapter
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (position == adapter.itemCount - 1) {
-                    binding.btnNext.text = getString(R.string.continue_text)
-                } else {
-                    binding.btnNext.text = getString(R.string.next)
+        binding.viewPager.registerOnPageChangeCallback(
+                object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        if (position == adapter.itemCount - 1) {
+                            binding.btnNext.text = getString(R.string.continue_text)
+                        } else {
+                            binding.btnNext.text = getString(R.string.next)
+                        }
+                    }
                 }
-            }
-        })
+        )
     }
 
     private fun setupButtons() {
-        binding.btnSkip.setOnClickListener {
-            finishOnboarding()
-        }
+        binding.btnSkip.setOnClickListener { finishOnboarding() }
 
         binding.btnNext.setOnClickListener {
             val currentItem = binding.viewPager.currentItem
@@ -60,6 +59,19 @@ class OnboardingActivity : AppCompatActivity() {
                 finishOnboarding()
             }
         }
+    }
+
+    fun navigateToNextScreen() {
+        val currentItem = binding.viewPager.currentItem
+        if (currentItem < adapter.itemCount - 1) {
+            binding.viewPager.currentItem = currentItem + 1
+        } else {
+            finishOnboarding()
+        }
+    }
+
+    fun navigateToLogin() {
+        finishOnboarding()
     }
 
     private fun finishOnboarding() {

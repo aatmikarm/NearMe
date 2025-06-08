@@ -49,14 +49,15 @@ class AuthActivity : AppCompatActivity() {
         binding.ccp.resetToDefaultCountry()
 
         // Initialize OTP fields array
-        otpFields = arrayOf(
-            binding.etOtp1,
-            binding.etOtp2,
-            binding.etOtp3,
-            binding.etOtp4,
-            binding.etOtp5,
-            binding.etOtp6
-        )
+        otpFields =
+                arrayOf(
+                        binding.etOtp1,
+                        binding.etOtp2,
+                        binding.etOtp3,
+                        binding.etOtp4,
+                        binding.etOtp5,
+                        binding.etOtp6
+                )
 
         setupOtpFieldsLogic()
         setupListeners()
@@ -77,27 +78,45 @@ class AuthActivity : AppCompatActivity() {
         // Add text watchers to each OTP field
         for (i in otpFields.indices) {
             // Text change listener
-            otpFields[i].addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            otpFields[i].addTextChangedListener(
+                    object : TextWatcher {
+                        override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                        ) {}
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // If text is entered, move to next field
-                    if (s?.length == 1 && i < otpFields.size - 1) {
-                        otpFields[i + 1].requestFocus()
+                        override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                        ) {
+                            // If text is entered, move to next field and update background
+                            if (s?.length == 1) {
+                                otpFields[i].setBackgroundResource(R.drawable.bg_otp_box_filled)
+                                if (i < otpFields.size - 1) {
+                                    otpFields[i + 1].requestFocus()
+                                }
+                            } else {
+                                otpFields[i].setBackgroundResource(R.drawable.bg_otp_box)
+                            }
+
+                            // Update the verification code field (for backward compatibility)
+                            updateVerificationCodeField()
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {}
                     }
-
-                    // Update the verification code field (for backward compatibility)
-                    updateVerificationCodeField()
-                }
-
-                override fun afterTextChanged(s: Editable?) {}
-            })
+            )
 
             // Handle backspace key to move to previous field
             otpFields[i].setOnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
                     if (otpFields[i].text.isEmpty() && i > 0) {
                         otpFields[i - 1].text = null
+                        otpFields[i - 1].setBackgroundResource(R.drawable.bg_otp_box)
                         otpFields[i - 1].requestFocus()
                         return@setOnKeyListener true
                     }
@@ -131,8 +150,10 @@ class AuthActivity : AppCompatActivity() {
         // Set up keyboard action listener for phone number field
         binding.etPhoneNumber.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
-                actionId == EditorInfo.IME_ACTION_NEXT ||
-                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                            actionId == EditorInfo.IME_ACTION_NEXT ||
+                            (event != null &&
+                                    event.keyCode == KeyEvent.KEYCODE_ENTER &&
+                                    event.action == KeyEvent.ACTION_DOWN)
             ) {
                 // Same action as send code button
                 val phoneNumber = getFullPhoneNumber()
@@ -142,7 +163,7 @@ class AuthActivity : AppCompatActivity() {
                     return@setOnEditorActionListener true
                 } else {
                     Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT)
-                        .show()
+                            .show()
                 }
             }
             false
@@ -160,9 +181,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         // Verify code button
-        binding.btnVerifyCode.setOnClickListener {
-            verifyOtp()
-        }
+        binding.btnVerifyCode.setOnClickListener { verifyOtp() }
 
         // Resend code button
         binding.btnResendCode.setOnClickListener {
@@ -181,13 +200,12 @@ class AuthActivity : AppCompatActivity() {
         if (otp.length == 6) {
             viewModel.verifyCode(otp)
         } else {
-            Toast.makeText(this, "Please enter the 6-digit verification code", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please enter the 6-digit verification code", Toast.LENGTH_SHORT)
+                    .show()
         }
     }
 
-    /**
-     * Get the full phone number with country code
-     */
+    /** Get the full phone number with country code */
     private fun getFullPhoneNumber(): String {
         val phoneNumber = binding.etPhoneNumber.text.toString().trim()
         if (phoneNumber.isEmpty()) {
@@ -198,11 +216,12 @@ class AuthActivity : AppCompatActivity() {
         val countryCode = binding.ccp.selectedCountryCodeWithPlus
 
         // Remove any plus sign if user added it
-        val cleanPhoneNumber = if (phoneNumber.startsWith("+")) {
-            phoneNumber.substring(1)
-        } else {
-            phoneNumber
-        }
+        val cleanPhoneNumber =
+                if (phoneNumber.startsWith("+")) {
+                    phoneNumber.substring(1)
+                } else {
+                    phoneNumber
+                }
 
         // For India, validate the phone number format (should be 10 digits)
         if (binding.ccp.selectedCountryNameCode == "IN") {
@@ -210,10 +229,11 @@ class AuthActivity : AppCompatActivity() {
             val isValidIndianNumber = cleanPhoneNumber.matches(Regex("^[6-9][0-9]{9}$"))
             if (!isValidIndianNumber) {
                 Toast.makeText(
-                    this,
-                    "Please enter a valid 10-digit Indian mobile number",
-                    Toast.LENGTH_SHORT
-                ).show()
+                                this,
+                                "Please enter a valid 10-digit Indian mobile number",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
                 return ""
             }
         }
@@ -243,9 +263,7 @@ class AuthActivity : AppCompatActivity() {
 
         // Observe verification failures
         viewModel.verificationError.observe(this) { error ->
-            error?.let {
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
-            }
+            error?.let { Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show() }
         }
 
         // Observe authentication result
@@ -256,10 +274,11 @@ class AuthActivity : AppCompatActivity() {
                     viewModel.checkUserProfileExists()
                 } else {
                     Toast.makeText(
-                        this,
-                        "Verification failed: ${result.exceptionOrNull()?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                                    this,
+                                    "Verification failed: ${result.exceptionOrNull()?.message}",
+                                    Toast.LENGTH_LONG
+                            )
+                            .show()
                 }
             }
         }
@@ -301,18 +320,21 @@ class AuthActivity : AppCompatActivity() {
         binding.tvResendTimer.visibility = View.VISIBLE
         binding.btnResendCode.visibility = View.GONE
 
-        countDownTimer = object : CountDownTimer(60000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secondsRemaining = millisUntilFinished / 1000
-                binding.tvResendTimer.text = getString(R.string.resend_in_seconds, secondsRemaining)
-            }
+        countDownTimer =
+                object : CountDownTimer(60000, 1000) {
+                            override fun onTick(millisUntilFinished: Long) {
+                                val secondsRemaining = millisUntilFinished / 1000
+                                binding.tvResendTimer.text =
+                                        getString(R.string.resend_in_seconds, secondsRemaining)
+                            }
 
-            override fun onFinish() {
-                binding.btnResendCode.isEnabled = true
-                binding.tvResendTimer.visibility = View.GONE
-                binding.btnResendCode.visibility = View.VISIBLE
-            }
-        }.start()
+                            override fun onFinish() {
+                                binding.btnResendCode.isEnabled = true
+                                binding.tvResendTimer.visibility = View.GONE
+                                binding.btnResendCode.visibility = View.VISIBLE
+                            }
+                        }
+                        .start()
     }
 
     private fun navigateToMainActivity() {

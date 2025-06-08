@@ -54,9 +54,13 @@ class NearbyFragment : Fragment() {
             }
         )
 
+        // Use Grid Layout with 2 columns
         binding.rvNearbyUsers.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = nearbyAdapter
+
+            // Add item spacing
+            addItemDecoration(GridSpacingItemDecoration(2, 12, true))
         }
     }
 
