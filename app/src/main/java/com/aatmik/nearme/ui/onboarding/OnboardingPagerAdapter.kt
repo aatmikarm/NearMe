@@ -1,64 +1,15 @@
 // Create a new file: app/src/main/java/com/aatmik/nearme/ui/onboarding/OnboardingPagerAdapter.kt
 package com.aatmik.nearme.ui.onboarding
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.aatmik.nearme.R
-import com.aatmik.nearme.databinding.OnboardingSlideBinding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class OnboardingPagerAdapter(private val context: Context) :
-    RecyclerView.Adapter<OnboardingPagerAdapter.OnboardingViewHolder>() {
+class OnboardingPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    private val slides = listOf(
-        OnboardingSlide(
-            R.drawable.ic_logo,
-            context.getString(R.string.app_name),
-            "Find people near you"
-        ),
-        OnboardingSlide(
-            R.drawable.ic_nearby,
-            "Connect when you're nearby",
-            "Get notified when someone is within 100m"
-        ),
-        OnboardingSlide(
-            R.drawable.ic_instagram,
-            "Share Instagram",
-            "Connect your Instagram for social verification"
-        )
-    )
+    override fun getItemCount(): Int = 3 // Total number of onboarding screens
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OnboardingViewHolder {
-        val binding = OnboardingSlideBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return OnboardingViewHolder(binding)
+    override fun createFragment(position: Int): Fragment {
+        return OnboardingSlideFragment.newInstance(position)
     }
-
-    override fun onBindViewHolder(holder: OnboardingViewHolder, position: Int) {
-        val slide = slides[position]
-        holder.bind(slide)
-    }
-
-    override fun getItemCount(): Int = slides.size
-
-    inner class OnboardingViewHolder(private val binding: OnboardingSlideBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(slide: OnboardingSlide) {
-            binding.ivSlideImage.setImageResource(slide.imageResId)
-            binding.tvSlideTitle.text = slide.title
-            binding.tvSlideDescription.text = slide.description
-        }
-    }
-
-    data class OnboardingSlide(
-        val imageResId: Int,
-        val title: String,
-        val description: String
-    )
 }

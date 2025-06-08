@@ -9,7 +9,7 @@
 
     <!-- Text Styles -->
     <style name="TextAppearance.NearMe.Headline" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="fontFamily">@font/pacifico</item>
     </style>
 
     <style name="TextAppearance.NearMe.Body" parent="TextAppearance.MaterialComponents.Body1">

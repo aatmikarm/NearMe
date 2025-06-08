@@ -4,106 +4,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_user"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_height="320dp"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <!-- Profile Image - Now rectangular and on the left side -->
+        <!-- Profile Image covering full card -->
         <ImageView
             android:id="@+id/iv_user_photo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:contentDescription="@string/profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/profile_photo"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- User info -->
-        <TextView
-            android:id="@+id/tv_name_age"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
+        <!-- Gradient overlay for text readability -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/gradient_black_transparent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Close/Skip button (top right) -->
+        <ImageButton
+            android:id="@+id/btn_skip"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_circular_white_semi_transparent"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Skip"
+            app:tint="@color/text_dark"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Alice, 25" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_distance_chip"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textColor="@android:color/white"
-            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name_age"
-            tools:text="150m away" />
-
-        <TextView
-            android:id="@+id/tv_bio_preview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
-            app:layout_constraintTop_toBottomOf="@+id/tv_distance"
-            tools:text="I enjoy hiking, reading books, and traveling to new places." />
-
-        <!-- Action buttons -->
+        <!-- User Info Container -->
         <LinearLayout
-            android:id="@+id/layout_actions"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/action_buttons_layout">
+
+            <!-- Name and Age -->
+            <TextView
+                android:id="@+id/tv_name_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="Monica (24)" />
+
+            <!-- Distance -->
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/white"
+                tools:text="500m Away" />
+
+            <!-- Bio -->
+            <TextView
+                android:id="@+id/tv_bio_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/white"
+                android:alpha="0.9"
+                tools:text="marcon specialist at paris university 2014" />
+
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:id="@+id/action_buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_user_photo"
-            app:layout_constraintTop_toBottomOf="@+id/tv_bio_preview">
+            android:gravity="center"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
+            <!-- Heart/Like Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_skip"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/btn_like"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/skip" />
+                android:layout_marginEnd="4dp"
+                android:text=""
+                app:icon="@drawable/heart"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="12dp" />
 
+            <!-- Message Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_connect"
+                android:id="@+id/btn_message"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/connect" />
+                android:layout_marginStart="4dp"
+                android:text=""
+                app:icon="@drawable/chat"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
 

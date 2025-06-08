@@ -121,4 +121,8 @@ dependencies {
 
     //country code picker
     implementation("com.hbb20:ccp:2.7.2")
+
+    //flexbox layout
+    implementation (libs.google.flexbox)
+
 }

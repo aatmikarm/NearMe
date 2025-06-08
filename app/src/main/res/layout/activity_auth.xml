@@ -10,12 +10,12 @@
 
     <!-- App Logo -->
     <ImageView
-        android:id="@+id/iv_logo"
+        android:id="@+id/iv_logo_purple"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="48dp"
         android:contentDescription="@string/app_logo"
-        android:src="@drawable/ic_logo"
+        android:src="@drawable/iv_logo_purple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_logo_purple" />
 
     <!-- Phone Number Input Layout -->
     <LinearLayout
@@ -128,12 +128,28 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_app_name"
         tools:visibility="visible">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/verification_code_title"
-            android:textAppearance="@style/TextAppearance.NearMe.Body"
-            android:textColor="@color/text_gray" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/verification_code_title"
+                android:textAppearance="@style/TextAppearance.NearMe.Body"
+                android:textColor="@color/text_gray" />
+
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_verify_icon"
+                android:scaleType="fitEnd" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_phone_display"
@@ -173,7 +189,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="1" />
 
             <EditText
                 android:id="@+id/et_otp_2"
@@ -187,7 +204,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="2" />
 
             <EditText
                 android:id="@+id/et_otp_3"
@@ -201,7 +219,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="3" />
 
             <EditText
                 android:id="@+id/et_otp_4"
@@ -215,7 +234,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="4" />
 
             <EditText
                 android:id="@+id/et_otp_5"
@@ -229,7 +249,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="5" />
 
             <EditText
                 android:id="@+id/et_otp_6"
@@ -243,7 +264,8 @@
                 android:maxLength="1"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:tag="6" />
         </LinearLayout>
 
         <Button
@@ -283,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="@string/resend_in_seconds"
-                android:textColor="@color/text_gray"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
                 android:visibility="visible" />
 

@@ -43,7 +43,7 @@ class NearbyAdapter(
                 }
             }
 
-            binding.btnConnect.setOnClickListener {
+            binding.btnLike.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onConnectClicked(getItem(position).userId)
