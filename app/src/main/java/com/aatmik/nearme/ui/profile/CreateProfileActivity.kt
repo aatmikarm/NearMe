@@ -3,6 +3,8 @@ package com.aatmik.nearme.ui.profile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +22,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateProfileBinding
     private val viewModel: CreateProfileViewModel by viewModels()
+    private val maxBioChars = 50
 
     // Selected profile photo URI
     private var selectedPhotoUri: Uri? = null
@@ -110,6 +113,45 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun setupListeners() {
         // Profile image container
         binding.profileImageContainer.setOnClickListener { photoPicker.launch("image/*") }
+
+        // Bio character counter
+        binding.etBio.addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                    ) {}
+
+                    override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                    ) {
+                        val charCount = s?.length ?: 0
+
+                        // Update character count display
+                        binding.bioMaxWords.text = "$charCount/$maxBioChars Characters"
+
+                        // Show/hide limit warning and change text color
+                        if (charCount >= maxBioChars) {
+                            binding.tvBioLimitWarning.visibility = View.VISIBLE
+                            binding.bioMaxWords.setTextColor(
+                                    resources.getColor(android.R.color.holo_red_dark, theme)
+                            )
+                        } else {
+                            binding.tvBioLimitWarning.visibility = View.GONE
+                            binding.bioMaxWords.setTextColor(
+                                    resources.getColor(android.R.color.darker_gray, theme)
+                            )
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {}
+                }
+        )
 
         // Gender selection
         binding.radioMale.setOnCheckedChangeListener { _, isChecked ->

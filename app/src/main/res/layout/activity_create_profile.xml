@@ -179,12 +179,23 @@
                 android:id="@+id/bio_max_words"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00/200 Words"
+                android:text="00/50 Characters"
                 android:textColor="#888888"
                 android:textSize="12sp"
                 android:fontFamily="@font/poppins_medium"
                 android:layout_gravity="end" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_bio_limit_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You have reached the word limit"
+            android:textColor="#FF0000"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppins_medium"
+            android:visibility="gone"
+            android:layout_marginBottom="4dp"/>
 
         <EditText
             android:id="@+id/et_bio"
