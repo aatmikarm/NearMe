@@ -9,12 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.aatmik.nearme.databinding.ActivityCreateProfileBinding
-import com.aatmik.nearme.model.UserPhoto
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.ui.main.MainActivity
 import com.aatmik.nearme.util.ImageCompressor
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.UUID
 
 @AndroidEntryPoint
 class CreateProfileActivity : AppCompatActivity() {
@@ -26,27 +24,23 @@ class CreateProfileActivity : AppCompatActivity() {
     private var selectedPhotoUri: Uri? = null
 
     // Photo picker launcher
-    // Update the photo selection in CreateProfileActivity.kt
-    private val photoPicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            // Compress the image before using it
-            val compressedUri = ImageCompressor.compressImage(this, it)
+    private val photoPicker =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+                uri?.let {
+                    // Compress the image before using it
+                    val compressedUri = ImageCompressor.compressImage(this, it)
 
-            if (compressedUri != null) {
-                selectedPhotoUri = compressedUri
-                binding.ivProfilePhoto.setImageURI(compressedUri)
-                binding.btnAddPhoto.text = "Change Photo"
-            } else {
-                // If compression fails, use the original URI
-                selectedPhotoUri = it
-                binding.ivProfilePhoto.setImageURI(it)
-                binding.btnAddPhoto.text = "Change Photo"
-
-                // Inform the user that we'll be using the original image
-                Toast.makeText(this, "Using original image size", Toast.LENGTH_SHORT).show()
+                    if (compressedUri != null) {
+                        selectedPhotoUri = compressedUri
+                        binding.ivProfilePhoto.setImageURI(compressedUri)
+                    } else {
+                        // If compression fails, use the original URI
+                        selectedPhotoUri = it
+                        binding.ivProfilePhoto.setImageURI(it)
+                        Toast.makeText(this, "Using original image size", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +53,8 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Add photo button
-        binding.btnAddPhoto.setOnClickListener {
-            photoPicker.launch("image/*")
-        }
+        // Profile image container
+        binding.profileImageContainer.setOnClickListener { photoPicker.launch("image/*") }
 
         // Gender selection
         binding.radioMale.setOnCheckedChangeListener { _, isChecked ->
@@ -110,10 +102,11 @@ class CreateProfileActivity : AppCompatActivity() {
                 } else {
                     // Profile creation failed
                     Toast.makeText(
-                        this,
-                        "Failed to create profile: ${result.exceptionOrNull()?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                                    this,
+                                    "Failed to create profile: ${result.exceptionOrNull()?.message}",
+                                    Toast.LENGTH_LONG
+                            )
+                            .show()
                 }
             }
         }
@@ -143,7 +136,10 @@ class CreateProfileActivity : AppCompatActivity() {
         }
 
         // Validate gender selection
-        if (!binding.radioMale.isChecked && !binding.radioFemale.isChecked && !binding.radioNonBinary.isChecked) {
+        if (!binding.radioMale.isChecked &&
+                        !binding.radioFemale.isChecked &&
+                        !binding.radioNonBinary.isChecked
+        ) {
             Toast.makeText(this, "Please select your gender", Toast.LENGTH_SHORT).show()
             isValid = false
         }
@@ -157,32 +153,25 @@ class CreateProfileActivity : AppCompatActivity() {
         return isValid
     }
 
-    // Update in CreateProfileActivity.kt - in createUserProfile
     private fun createUserProfile() {
         val name = binding.etName.text.toString().trim()
         val age = binding.etAge.text.toString().trim().toInt()
 
-        val gender = when {
-            binding.radioMale.isChecked -> "male"
-            binding.radioFemale.isChecked -> "female"
-            binding.radioNonBinary.isChecked -> "non-binary"
-            else -> ""
-        }
+        val gender =
+                when {
+                    binding.radioMale.isChecked -> "male"
+                    binding.radioFemale.isChecked -> "female"
+                    binding.radioNonBinary.isChecked -> "non-binary"
+                    else -> ""
+                }
 
         val bio = binding.etBio.text.toString().trim()
 
         // Create empty user profile
-        val userProfile = UserProfile(
-            displayName = name,
-            age = age,
-            gender = gender,
-            bio = bio
-        )
+        val userProfile = UserProfile(displayName = name, age = age, gender = gender, bio = bio)
 
         // Upload photo and create profile
-        selectedPhotoUri?.let { uri ->
-            viewModel.createProfileWithPhoto(userProfile, uri)
-        }
+        selectedPhotoUri?.let { uri -> viewModel.createProfileWithPhoto(userProfile, uri) }
     }
 
     private fun navigateToMainActivity() {
