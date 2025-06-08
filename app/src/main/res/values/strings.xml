@@ -47,13 +47,13 @@
     <string name="create_profile">Create Your Profile</string>
     <string name="create_profile_subtitle">Let others know who you are</string>
     <string name="add_photo">Add Photo</string>
-    <string name="name">Name</string>
-    <string name="age">Age</string>
+    <string name="name">Enter Your Name</string>
+    <string name="age">Enter Your Age</string>
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="non_binary">Non-binary</string>
-    <string name="bio_optional">Bio (optional)</string>
+    <string name="bio_optional">Bio</string>
 
     <!-- Nearby Fragment -->
     <string name="filter">Filter</string>
