@@ -115,6 +115,20 @@ class CreateProfileActivity : AppCompatActivity() {
         // Profile image container
         binding.profileImageContainer.setOnClickListener { photoPicker.launch("image/*") }
 
+        // Instagram handle validation
+        binding.etInstagram.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val instagramHandle = s?.toString()?.trim() ?: ""
+                if (instagramHandle.isNotEmpty()) {
+                    binding.tvInstagramError.visibility = View.GONE
+                } else {
+                    binding.tvInstagramError.visibility = View.VISIBLE
+                }
+            }
+        })
+
         // Bio character counter
         binding.etBio.addTextChangedListener(
                 object : TextWatcher {
@@ -255,8 +269,19 @@ class CreateProfileActivity : AppCompatActivity() {
             binding.tvPhotoError.visibility = View.GONE
         }
 
+        // Validate Instagram handle
+        val instagramHandle = binding.etInstagram.text.toString().trim()
+
+        if (instagramHandle.isEmpty()) {
+            binding.tvInstagramError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.tvInstagramError.visibility = View.GONE
+        }
+
         // Validate bio
         val bio = binding.etBio.text.toString().trim()
+
         if (bio.isEmpty()) {
             binding.etBio.error = "Bio is required"
             isValid = false
@@ -291,15 +316,16 @@ class CreateProfileActivity : AppCompatActivity() {
 
         val bio = binding.etBio.text.toString().trim()
 
+        val instagramHandle = binding.etInstagram.text.toString().trim()
+
         // Create user profile with interests
-        val userProfile =
-                UserProfile(
-                        displayName = name,
-                        age = age,
-                        gender = gender,
-                        bio = bio,
-                        interests = selectedInterests.toList()
-                )
+        val userProfile = UserProfile(
+                            displayName = name,
+                            age = age,
+                            gender = gender,
+                            bio = bio,
+                            instagramId = instagramHandle,
+                            interests = selectedInterests.toList())
 
         // Upload photo and create profile
         selectedPhotoUri?.let { uri -> viewModel.createProfileWithPhoto(userProfile, uri) }
