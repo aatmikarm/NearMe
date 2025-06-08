@@ -62,6 +62,8 @@
                 android:layout_margin="4dp" />
         </FrameLayout>
 
+
+
         <!-- Name -->
         <TextView
             android:layout_width="wrap_content"
@@ -155,14 +157,34 @@
         </RadioGroup>
 
         <!-- Bio -->
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/bio_optional"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp"
-            android:fontFamily="@font/poppins_medium" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bio"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:fontFamily="@font/poppins_medium" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/bio_max_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00/200 Words"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins_medium"
+                android:layout_gravity="end" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et_bio"
@@ -177,6 +199,209 @@
             android:fontFamily="@font/poppins_medium"
             android:layout_marginBottom="24dp" />
 
+
+        <!-- Interest Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interest"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:fontFamily="@font/poppins_medium" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_interest_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select 00/3"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins_medium"
+                android:layout_gravity="end" />
+        </LinearLayout>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flexbox_interests"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            app:alignContent="stretch"
+            app:justifyContent="flex_start">
+
+            <TextView
+                android:id="@+id/chip_travel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Travel ✈️"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_sports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Sports 🏀"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Music 🎵"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_reading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Reading 📚"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Movies 🎬"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_cooking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Cooking 🍳"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_self_growth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Self growth 📈"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_education"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Education 📖"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_gaming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Gaming 🎮"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+            <TextView
+                android:id="@+id/chip_fashion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_selected"
+                android:text="Fashion 👗"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_margin="6dp"
+                android:textColor="@color/text_color_chip"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:stateListAnimator="@null"
+                android:state_selected="false" />
+        </com.google.android.flexbox.FlexboxLayout>
+
         <!-- Continue Button -->
         <Button
             android:id="@+id/btn_continue"
@@ -188,7 +413,7 @@
             android:textAllCaps="false"
             android:background="@drawable/bg_button_white"
             android:fontFamily="@font/poppins_medium"
-            android:padding="12dp" />
+            android:padding="10dp" />
 
         <!-- Progress Bar -->
         <ProgressBar

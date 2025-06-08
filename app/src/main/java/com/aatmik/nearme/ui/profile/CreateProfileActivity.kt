@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -22,6 +23,10 @@ class CreateProfileActivity : AppCompatActivity() {
 
     // Selected profile photo URI
     private var selectedPhotoUri: Uri? = null
+
+    // Selected interests
+    private val selectedInterests = mutableSetOf<String>()
+    private val maxInterests = 3
 
     // Photo picker launcher
     private val photoPicker =
@@ -50,6 +55,56 @@ class CreateProfileActivity : AppCompatActivity() {
 
         setupListeners()
         observeViewModel()
+        setupInterestChips()
+    }
+
+    private fun setupInterestChips() {
+        val interestChips =
+                listOf(
+                        binding.chipTravel,
+                        binding.chipSports,
+                        binding.chipMusic,
+                        binding.chipReading,
+                        binding.chipMovies,
+                        binding.chipCooking,
+                        binding.chipSelfGrowth,
+                        binding.chipEducation,
+                        binding.chipGaming,
+                        binding.chipFashion
+                )
+
+        interestChips.forEach { chip -> chip.setOnClickListener { handleInterestSelection(chip) } }
+    }
+
+    private fun handleInterestSelection(chip: TextView) {
+        val interest = chip.text.toString()
+
+        if (chip.isSelected) {
+            // Deselect the chip
+            chip.isSelected = false
+            selectedInterests.remove(interest)
+        } else {
+            // Try to select the chip
+            if (selectedInterests.size < maxInterests) {
+                chip.isSelected = true
+                selectedInterests.add(interest)
+            } else {
+                Toast.makeText(
+                                this,
+                                "You can only select up to $maxInterests interests",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
+                return
+            }
+        }
+
+        // Update the selection count
+        updateInterestCount()
+    }
+
+    private fun updateInterestCount() {
+        binding.tvInterestCount.text = "Select ${selectedInterests.size}/$maxInterests"
     }
 
     private fun setupListeners() {
@@ -150,6 +205,12 @@ class CreateProfileActivity : AppCompatActivity() {
             isValid = false
         }
 
+        // Validate interests
+        if (selectedInterests.isEmpty()) {
+            Toast.makeText(this, "Please select at least one interest", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
         return isValid
     }
 
@@ -167,8 +228,15 @@ class CreateProfileActivity : AppCompatActivity() {
 
         val bio = binding.etBio.text.toString().trim()
 
-        // Create empty user profile
-        val userProfile = UserProfile(displayName = name, age = age, gender = gender, bio = bio)
+        // Create user profile with interests
+        val userProfile =
+                UserProfile(
+                        displayName = name,
+                        age = age,
+                        gender = gender,
+                        bio = bio,
+                        interests = selectedInterests.toList()
+                )
 
         // Upload photo and create profile
         selectedPhotoUri?.let { uri -> viewModel.createProfileWithPhoto(userProfile, uri) }
