@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="4dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/profile_image_container"
@@ -62,7 +62,17 @@
                 android:layout_margin="4dp" />
         </FrameLayout>
 
-
+        <TextView
+            android:id="@+id/tv_photo_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please add a profile photo"
+            android:textColor="#FF0000"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppins_medium"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
 
         <!-- Name -->
         <TextView
@@ -119,12 +129,23 @@
             android:layout_marginBottom="4dp"
             android:fontFamily="@font/poppins_medium" />
 
+        <TextView
+            android:id="@+id/tv_gender_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please select your gender"
+            android:textColor="#FF0000"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppins_medium"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
+
         <RadioGroup
             android:id="@+id/radioGender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="4dp">
 
             <RadioButton
                 android:id="@+id/radioMale"
@@ -201,7 +222,7 @@
             android:id="@+id/et_bio"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:hint="@string/bio_optional"
+            android:hint="Tell us about yourself"
             android:background="@drawable/bg_input"
             android:gravity="top|start"
             android:textSize="14sp"

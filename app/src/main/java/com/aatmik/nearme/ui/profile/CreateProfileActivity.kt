@@ -41,10 +41,12 @@ class CreateProfileActivity : AppCompatActivity() {
                     if (compressedUri != null) {
                         selectedPhotoUri = compressedUri
                         binding.ivProfilePhoto.setImageURI(compressedUri)
+                        binding.tvPhotoError.visibility = View.GONE
                     } else {
                         // If compression fails, use the original URI
                         selectedPhotoUri = it
                         binding.ivProfilePhoto.setImageURI(it)
+                        binding.tvPhotoError.visibility = View.GONE
                         Toast.makeText(this, "Using original image size", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -92,12 +94,9 @@ class CreateProfileActivity : AppCompatActivity() {
                 chip.isSelected = true
                 selectedInterests.add(interest)
             } else {
-                Toast.makeText(
-                                this,
-                                "You can only select up to $maxInterests interests",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show()
+                binding.tvInterestCount.setTextColor(
+                        resources.getColor(android.R.color.holo_red_dark, theme)
+                )
                 return
             }
         }
@@ -107,7 +106,9 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     private fun updateInterestCount() {
-        binding.tvInterestCount.text = "Select ${selectedInterests.size}/$maxInterests"
+        binding.tvInterestCount.text = "Select ${selectedInterests.size}/$maxInterests (Required)"
+        // Reset text color
+        binding.tvInterestCount.setTextColor(resources.getColor(android.R.color.darker_gray, theme))
     }
 
     private fun setupListeners() {
@@ -158,6 +159,7 @@ class CreateProfileActivity : AppCompatActivity() {
             if (isChecked) {
                 binding.radioFemale.isChecked = false
                 binding.radioNonBinary.isChecked = false
+                binding.tvGenderError.visibility = View.GONE
             }
         }
 
@@ -165,6 +167,7 @@ class CreateProfileActivity : AppCompatActivity() {
             if (isChecked) {
                 binding.radioMale.isChecked = false
                 binding.radioNonBinary.isChecked = false
+                binding.tvGenderError.visibility = View.GONE
             }
         }
 
@@ -172,6 +175,7 @@ class CreateProfileActivity : AppCompatActivity() {
             if (isChecked) {
                 binding.radioMale.isChecked = false
                 binding.radioFemale.isChecked = false
+                binding.tvGenderError.visibility = View.GONE
             }
         }
 
@@ -237,20 +241,37 @@ class CreateProfileActivity : AppCompatActivity() {
                         !binding.radioFemale.isChecked &&
                         !binding.radioNonBinary.isChecked
         ) {
-            Toast.makeText(this, "Please select your gender", Toast.LENGTH_SHORT).show()
+            binding.tvGenderError.visibility = View.VISIBLE
             isValid = false
+        } else {
+            binding.tvGenderError.visibility = View.GONE
         }
 
         // Validate photo
         if (selectedPhotoUri == null) {
-            Toast.makeText(this, "Please add a profile photo", Toast.LENGTH_SHORT).show()
+            binding.tvPhotoError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.tvPhotoError.visibility = View.GONE
+        }
+
+        // Validate bio
+        val bio = binding.etBio.text.toString().trim()
+        if (bio.isEmpty()) {
+            binding.etBio.error = "Bio is required"
             isValid = false
         }
 
-        // Validate interests
-        if (selectedInterests.isEmpty()) {
-            Toast.makeText(this, "Please select at least one interest", Toast.LENGTH_SHORT).show()
+        // Validate interests - must select exactly 3
+        if (selectedInterests.size != maxInterests) {
+            binding.tvInterestCount.setTextColor(
+                    resources.getColor(android.R.color.holo_red_dark, theme)
+            )
             isValid = false
+        } else {
+            binding.tvInterestCount.setTextColor(
+                    resources.getColor(android.R.color.darker_gray, theme)
+            )
         }
 
         return isValid
