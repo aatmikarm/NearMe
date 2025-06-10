@@ -31,7 +31,7 @@
             android:text="NearMe"
             android:textAppearance="@style/TextAppearance.NearMe.Headline"
             android:textStyle="bold"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textColor="@color/text_dark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,8 +40,9 @@
 
         <ImageButton
             android:id="@+id/btn_notifications"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:scaleType="fitXY"
             android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/notification"
@@ -52,8 +53,9 @@
 
         <ImageButton
             android:id="@+id/btn_filter"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:scaleType="fitXY"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/filter"
