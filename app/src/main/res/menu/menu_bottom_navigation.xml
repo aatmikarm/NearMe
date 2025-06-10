@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_nearby"
-        android:icon="@drawable/ic_nearby"
+        android:icon="@drawable/ic_home"
         android:title="@string/nearby" />
     <item
         android:id="@+id/navigation_matches"

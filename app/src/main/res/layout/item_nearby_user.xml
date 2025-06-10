@@ -28,17 +28,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Gradient overlay for text readability -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@drawable/gradient_black_transparent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
         <!-- Close/Skip button (top right) -->
         <ImageButton
             android:id="@+id/btn_skip"
             android:layout_width="32dp"
+            android:visibility="gone"
             android:layout_height="32dp"
             android:layout_margin="12dp"
             android:background="@drawable/bg_circular_white_semi_transparent"
@@ -52,86 +46,147 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/gradient_black_transparent"
             android:orientation="vertical"
-            android:padding="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/action_buttons_layout">
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <!-- Name and Age -->
             <TextView
-                android:id="@+id/tv_name_age"
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:fontFamily="@font/poppins_bold"
                 android:textColor="@color/white"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="Monica (24)" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="18 Years Old" />
 
             <!-- Distance -->
             <TextView
                 android:id="@+id/tv_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/white"
-                tools:text="500m Away" />
+                android:textSize="14sp"
+                tools:text="500m. Away" />
+
+            <!-- Tags Row -->
+            <LinearLayout
+                android:id="@+id/tags_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <!-- Example tag, will be set dynamically -->
+                <TextView
+                    android:id="@+id/tag1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="4dp"
+                    android:text="Foodie"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/tag2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="4dp"
+                    android:text="Fashion"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+                <!-- Add more tags dynamically in code if needed -->
+            </LinearLayout>
 
             <!-- Bio -->
             <TextView
                 android:id="@+id/tv_bio_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textColor="@color/white"
+                android:layout_marginTop="6dp"
                 android:alpha="0.9"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_regular"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:visibility="gone"
                 tools:text="marcon specialist at paris university 2014" />
 
+
+            <!-- Action Buttons -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/action_buttons_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <!-- Heart/Like Button -->
+                <ImageButton
+                    android:id="@+id/btn_like"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Like"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/heart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_message"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btn_message"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="chat"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/chat"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btn_like"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
 
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:id="@+id/action_buttons_layout"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="8dp"
-            app:layout_constraintBottom_toBottomOf="parent">
 
-            <!-- Heart/Like Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_like"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text=""
-                app:icon="@drawable/heart"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="12dp" />
-
-            <!-- Message Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_message"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:text=""
-                app:icon="@drawable/chat"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="12dp" />
-
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

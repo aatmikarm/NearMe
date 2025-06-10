@@ -63,7 +63,8 @@ class NearbyAdapter(
             Log.d("PhotoDebug", "NearbyAdapter - User ID: ${user.userId}, Photo URL: ${user.photoUrl}")
 
             // Set user data
-            binding.tvNameAge.text = "${user.name}, ${user.age}"
+            binding.tvName.text = "${user.name}"
+            binding.tvAge.text = "${user.age} Years Old"
             binding.tvDistance.text = formatDistance(user.distance)
             binding.tvBioPreview.text = user.bio
 
