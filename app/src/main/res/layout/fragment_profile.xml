@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,677 +7,814 @@
     android:background="@color/white"
     tools:context=".ui.profile.ProfileFragment">
 
-    <!-- Custom AppBar with curved bottom edge -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:elevation="0dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="@color/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!-- Background gradient for the app bar -->
-                <View
-                    android:id="@+id/gradient_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/profile_header_gradient" />
-
-                <!-- ViewPager for photo carousel -->
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/photo_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.9"
-                    android:scaleType="centerCrop" />
-
-                <!-- Photo indicators dots -->
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/photo_indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:tabBackground="@drawable/tab_selector"
-                    app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp" />
-
-                <!-- Shadow overlay for better text visibility -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@drawable/photo_shadow_gradient"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <!-- Floating Edit Photos Button -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_edit_photos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:contentDescription="@string/edit_photos"
-                    android:src="@drawable/ic_camera"
-                    app:backgroundTint="@color/white"
-                    app:fabSize="mini"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/colorPrimary" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:menu="@menu/menu_profile"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Main Content with Card Sections -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/rounded_top_background"
-        android:clipToPadding="false"
-        android:paddingTop="16dp"
-        android:paddingBottom="24dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
+        <!-- Main Content with Card Sections -->
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp">
+            android:background="@drawable/rounded_top_background"
+            android:clipToPadding="false"
+            android:paddingBottom="24dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Profile Info Card -->
-            <com.google.android.material.card.MaterialCardView
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Name, Age and Location Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/close_btn"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:scaleType="fitXY"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_close"
+                        android:contentDescription="Filter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
-                        <TextView
-                            android:id="@+id/tv_name_age"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.NearMe.Headline"
-                            android:textStyle="bold"
-                            tools:text="Alice, 25" />
-
-                        <ImageView
-                            android:id="@+id/iv_verified_badge"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="@string/verified"
-                            android:src="@drawable/ic_verified"
-                            app:tint="@color/colorPrimary" />
-
-                    </LinearLayout>
-
-                    <!-- Location with icon -->
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:text="Profile"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.NearMe.Headline"
+                        android:textStyle="bold"
+                        android:textSize="24sp"
+                        android:textColor="@color/text_dark"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/btn_filter"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/three_dots"
+                        android:contentDescription="Filter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </LinearLayout>
+
+                <!-- PROFILE HEADER (replace carousel with single photo) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_profile_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="4dp"
-                            android:contentDescription="@string/location"
-                            android:src="@drawable/ic_location_pin"
-                            app:tint="@color/colorAccent" />
+                            android:id="@+id/ivProfilePhoto"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/profile_photo"
+                            android:scaleType="centerCrop" />
 
-                        <TextView
-                            android:id="@+id/tv_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.NearMe.Body"
-                            android:textColor="@color/colorAccent"
-                            tools:text="Ajmer, Rajasthan" />
+                        <ImageView
+                            android:id="@+id/ivEditPhoto"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="top|end"
+                            android:layout_margin="16dp"
+                            android:contentDescription="@string/edit_photos"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_camera"
+                            />
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    </LinearLayout>
 
-                    <!-- Profile completion progress -->
+                <!-- Profile Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <!-- Name, Age and Location Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_name_age"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAppearance="@style/TextAppearance.NearMe.Headline"
+                                android:textStyle="bold"
+                                tools:text="Alice, 25" />
+
+                            <ImageView
+                                android:id="@+id/iv_verified_badge"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginStart="8dp"
+                                android:contentDescription="@string/verified"
+                                android:src="@drawable/ic_verified"
+                                app:tint="@color/colorPrimary" />
+
+                        </LinearLayout>
+
+                        <!-- Add after Name, Age and Location Row in Profile Info Card -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_gender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Woman"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            <TextView
+                                android:id="@+id/tv_height"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:text="173 cm"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            <TextView
+                                android:id="@+id/tv_weight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:text="62 kg"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            <TextView
+                                android:id="@+id/tv_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:text="5 km away"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                        </LinearLayout>
+
+                        <!-- Location with icon -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginEnd="4dp"
+                                android:contentDescription="@string/location"
+                                android:src="@drawable/ic_location_pin"
+                                app:tint="@color/colorAccent" />
+
+                            <TextView
+                                android:id="@+id/tv_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body"
+                                android:textColor="@color/colorAccent"
+                                tools:text="Ajmer, Rajasthan" />
+
+                        </LinearLayout>
+
+                        <!-- Profile completion progress -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/profile_completion"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_completion_percentage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body"
+                                    android:textStyle="bold"
+                                    tools:text="75%" />
+                            </LinearLayout>
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                android:id="@+id/progress_profile_completion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:progress="75"
+                                app:indicatorColor="@color/colorPrimary"
+                                app:trackColor="@color/grey_200" />
+
+                        </LinearLayout>
+
+                        <!-- Bio section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/about_me"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_bio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textAppearance="@style/TextAppearance.NearMe.Body"
+                            android:textColor="@color/text_gray"
+                            tools:text="Hello, I'm Alice. I enjoy hiking, reading, and meeting new people. Looking for meaningful connections with like-minded individuals." />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Interests Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/interests"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chip_group_interests"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:chipSpacingHorizontal="8dp"
+                            app:chipSpacingVertical="8dp">
+
+                            <!-- Sample chips that will be added programmatically -->
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Hiking"
+                                android:textColor="@color/colorPrimary"
+                                app:chipBackgroundColor="@color/chip_background"
+                                app:chipStrokeColor="@color/colorPrimary"
+                                app:chipStrokeWidth="1dp"
+                                tools:ignore="HardcodedText" />
+
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Reading"
+                                android:textColor="@color/colorPrimary"
+                                app:chipBackgroundColor="@color/chip_background"
+                                app:chipStrokeColor="@color/colorPrimary"
+                                app:chipStrokeWidth="1dp"
+                                tools:ignore="HardcodedText" />
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Instagram Connection Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/instagram"
+                                android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_weight="1" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_instagram_visibility"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/visible"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_instagram"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/instagram_background"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="@string/instagram"
+                                android:src="@drawable/ic_instagram_color" />
+
+                            <TextView
+                                android:id="@+id/tv_instagram"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body"
+                                android:textStyle="bold"
+                                tools:text="\@username" />
+
+                            <Button
+                                android:id="@+id/btn_connect_instagram"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/connect"
+                                android:textColor="@color/instagram_purple"
+                                android:visibility="gone"
+                                app:strokeColor="@color/instagram_purple"
+                                tools:visibility="visible" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Privacy & Location Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/privacy_and_location"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
+
+                        <!-- Location Sharing Toggle -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:contentDescription="@string/location_sharing"
+                                android:src="@drawable/ic_location_sharing"
+                                app:tint="@color/colorPrimary" />
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@string/profile_completion"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body"
-                                android:textStyle="bold" />
+                                android:text="@string/location_sharing"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
 
-                            <TextView
-                                android:id="@+id/tv_completion_percentage"
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_location_sharing"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body"
-                                android:textStyle="bold"
-                                tools:text="75%" />
+                                android:checked="true" />
                         </LinearLayout>
 
-                        <com.google.android.material.progressindicator.LinearProgressIndicator
-                            android:id="@+id/progress_profile_completion"
+                        <!-- Ghost Mode Toggle -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:contentDescription="@string/ghost_mode"
+                                android:src="@drawable/ic_ghost_mode"
+                                app:tint="@color/colorPrimary" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/ghost_mode"
+                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_ghost_mode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <!-- Proximity Range Slider -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/proximity_range"
+                            android:textAppearance="@style/TextAppearance.NearMe.Body"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:progress="75"
-                            app:indicatorColor="@color/colorPrimary"
-                            app:trackColor="@color/grey_200" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10m"
+                                android:textAppearance="@style/TextAppearance.NearMe.Caption"
+                                android:textColor="@color/grey_700"
+                                tools:ignore="HardcodedText" />
+
+                            <com.google.android.material.slider.Slider
+                                android:id="@+id/slider_proximity"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:value="50"
+                                android:valueFrom="0"
+                                android:valueTo="100" />
+
+                            <TextView
+                                android:id="@+id/tv_proximity_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.NearMe.Caption"
+                                android:textColor="@color/grey_700"
+                                tools:text="100m" />
+                        </LinearLayout>
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Bio section -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/about_me"
-                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_bio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textAppearance="@style/TextAppearance.NearMe.Body"
-                        android:textColor="@color/text_gray"
-                        tools:text="Hello, I'm Alice. I enjoy hiking, reading, and meeting new people. Looking for meaningful connections with like-minded individuals." />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Interests Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
+                <!-- Activity Stats Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/interests"
-                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chip_group_interests"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:chipSpacingHorizontal="8dp"
-                        app:chipSpacingVertical="8dp">
-
-                        <!-- Sample chips that will be added programmatically -->
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hiking"
-                            android:textColor="@color/colorPrimary"
-                            app:chipBackgroundColor="@color/chip_background"
-                            app:chipStrokeColor="@color/colorPrimary"
-                            app:chipStrokeWidth="1dp"
-                            tools:ignore="HardcodedText" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Reading"
-                            android:textColor="@color/colorPrimary"
-                            app:chipBackgroundColor="@color/chip_background"
-                            app:chipStrokeColor="@color/colorPrimary"
-                            app:chipStrokeWidth="1dp"
-                            tools:ignore="HardcodedText" />
-
-                    </com.google.android.material.chip.ChipGroup>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Instagram Connection Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/instagram"
+                            android:text="@string/activity"
                             android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
                             android:textStyle="bold" />
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch_instagram_visibility"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/visible"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_instagram"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/instagram_background"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="12dp">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="@string/instagram"
-                            android:src="@drawable/ic_instagram_color" />
-
-                        <TextView
-                            android:id="@+id/tv_instagram"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.NearMe.Body"
-                            android:textStyle="bold"
-                            tools:text="\@username" />
-
-                        <Button
-                            android:id="@+id/btn_connect_instagram"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/connect"
-                            android:textColor="@color/instagram_purple"
-                            android:visibility="gone"
-                            app:strokeColor="@color/instagram_purple"
-                            tools:visibility="visible" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Privacy & Location Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/privacy_and_location"
-                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
-                        android:textStyle="bold" />
-
-                    <!-- Location Sharing Toggle -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginEnd="12dp"
-                            android:contentDescription="@string/location_sharing"
-                            android:src="@drawable/ic_location_sharing"
-                            app:tint="@color/colorPrimary" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/location_sharing"
-                            android:textAppearance="@style/TextAppearance.NearMe.Body" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch_location_sharing"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true" />
-                    </LinearLayout>
-
-                    <!-- Ghost Mode Toggle -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginEnd="12dp"
-                            android:contentDescription="@string/ghost_mode"
-                            android:src="@drawable/ic_ghost_mode"
-                            app:tint="@color/colorPrimary" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/ghost_mode"
-                            android:textAppearance="@style/TextAppearance.NearMe.Body" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch_ghost_mode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false" />
-                    </LinearLayout>
-
-                    <!-- Proximity Range Slider -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/proximity_range"
-                        android:textAppearance="@style/TextAppearance.NearMe.Body"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10m"
-                            android:textAppearance="@style/TextAppearance.NearMe.Caption"
-                            android:textColor="@color/grey_700"
-                            tools:ignore="HardcodedText" />
-
-                        <com.google.android.material.slider.Slider
-                            android:id="@+id/slider_proximity"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:value="50"
-                            android:valueFrom="0"
-                            android:valueTo="100" />
-
-                        <TextView
-                            android:id="@+id/tv_proximity_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.NearMe.Caption"
-                            android:textColor="@color/grey_700"
-                            tools:text="100m" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Activity Stats Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/activity"
-                        android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-
-                        <!-- Matches Stat -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_matches_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.NearMe.Headline"
-                                android:textColor="@color/colorPrimary"
-                                android:textStyle="bold"
-                                tools:text="12" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/matches"
-                                android:textAppearance="@style/TextAppearance.NearMe.Caption" />
-                        </LinearLayout>
-
-                        <!-- Divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/grey_300" />
-
-                        <!-- Proximity Events Stat -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_proximity_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.NearMe.Headline"
-                                android:textColor="@color/colorPrimary"
-                                android:textStyle="bold"
-                                tools:text="38" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/proximity_events"
-                                android:textAppearance="@style/TextAppearance.NearMe.Caption" />
-                        </LinearLayout>
-
-                        <!-- Divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/grey_300" />
-
-                        <!-- Profile Views -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
+                            <!-- Matches Stat -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:gravity="center">
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/tv_views_count"
+                                    android:id="@+id/tv_matches_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textAppearance="@style/TextAppearance.NearMe.Headline"
                                     android:textColor="@color/colorPrimary"
                                     android:textStyle="bold"
-                                    tools:text="84" />
+                                    tools:text="12" />
 
-                                <!-- Premium Lock Icon -->
-                                <ImageView
-                                    android:id="@+id/iv_premium_lock"
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:layout_marginStart="4dp"
-                                    android:contentDescription="@string/premium_feature"
-                                    android:src="@drawable/ic_lock"
-                                    app:tint="@color/colorAccent" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/matches"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Caption" />
                             </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/grey_300" />
+
+                            <!-- Proximity Events Stat -->
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="@string/profile_views"
-                                android:textAppearance="@style/TextAppearance.NearMe.Caption"
-                                android:textColor="@color/text_gray" />
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_proximity_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Headline"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textStyle="bold"
+                                    tools:text="38" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/proximity_events"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Caption" />
+                            </LinearLayout>
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/grey_300" />
+
+                            <!-- Profile Views -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center">
+
+                                    <TextView
+                                        android:id="@+id/tv_views_count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textAppearance="@style/TextAppearance.NearMe.Headline"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold"
+                                        tools:text="84" />
+
+                                    <!-- Premium Lock Icon -->
+                                    <ImageView
+                                        android:id="@+id/iv_premium_lock"
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_marginStart="4dp"
+                                        android:contentDescription="@string/premium_feature"
+                                        android:src="@drawable/ic_lock"
+                                        app:tint="@color/colorAccent" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/profile_views"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Caption"
+                                    android:textColor="@color/text_gray" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
-            <!-- Action Buttons -->
-            <Button
-                android:id="@+id/btn_premium"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="12dp"
-                android:backgroundTint="@color/premium_gold"
-                android:text="@string/upgrade_to_premium"
-                android:textAppearance="@style/TextAppearance.NearMe.Button"
-                android:textColor="@color/white"
-                app:icon="@drawable/ic_premium"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white" />
+                <!-- Add after Interests Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-            <Button
-                android:id="@+id/btn_settings"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/settings"
-                android:textAppearance="@style/TextAppearance.NearMe.Button"
-                app:icon="@drawable/ic_settings"
-                app:iconGravity="textStart" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-            <Button
-                android:id="@+id/btn_logout"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/logout"
-                android:textColor="@color/error_red"
-                app:icon="@drawable/ic_logout"
-                app:iconGravity="textStart"
-                app:iconTint="@color/error_red"
-                app:strokeColor="@color/error_red" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Relationship Status"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
 
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+                        <TextView
+                            android:id="@+id/tv_relationship_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Dating 👋"
+                            android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+                <!-- Add Basics Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Basics"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
+                        <!-- Dummy basics content -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Zodiac: Taurus\nEducation: Graduate\nFamily Plans: Someday\nPersonality Type: ENFP\nLanguages: English, Hindi\nLove Style: Romantic\nBlood type: O+" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Add Lifestyle Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lifestyle"
+                            android:textAppearance="@style/TextAppearance.NearMe.Subtitle"
+                            android:textStyle="bold" />
+                        <!-- Dummy lifestyle content -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pets: Dog\nDrinking: Occasionally\nSmoking: No\nWorkout: Regular\nDiet: Vegetarian" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Action Buttons -->
+                <Button
+                    android:id="@+id/btn_premium"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="@color/premium_gold"
+                    android:text="@string/upgrade_to_premium"
+                    android:textAppearance="@style/TextAppearance.NearMe.Button"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_premium"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
+
+                <Button
+                    android:id="@+id/btn_settings"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/settings"
+                    android:textAppearance="@style/TextAppearance.NearMe.Button"
+                    app:icon="@drawable/ic_settings"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    android:id="@+id/btn_logout"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/logout"
+                    android:textColor="@color/error_red"
+                    app:icon="@drawable/ic_logout"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/error_red"
+                    app:strokeColor="@color/error_red" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.FragmentProfileBinding
 import com.aatmik.nearme.ui.auth.AuthActivity
+import com.bumptech.glide.Glide
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,15 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private val binding
+        get() = _binding!!
     private val TAG = "NearMe_ProfileFragment"
 
     private val viewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -91,11 +95,30 @@ class ProfileFragment : Fragment() {
 
             // Update UI with profile information
             profile?.let {
-                // Set profile image
-                // Glide.with(this).load(it.photos.firstOrNull { it.isPrimary }?.url).into(binding.ivProfilePhoto)
+                // Set single profile photo
+                val primaryPhoto =
+                        it.photos.firstOrNull { photo -> photo.isPrimary }
+                                ?: it.photos.firstOrNull()
+                Glide.with(this)
+                        .load(primaryPhoto?.url)
+                        .placeholder(R.drawable.ic_person)
+                        .error(R.drawable.ic_person)
+                        .centerCrop()
+                        .into(binding.ivProfilePhoto)
 
                 // Set name and age
                 binding.tvNameAge.text = "${it.displayName}, ${it.age}"
+                binding.tvGender.text = it.gender.capitalize()
+                binding.tvHeight.text = "173 cm" // Replace with actual value if available
+                binding.tvWeight.text = "62 kg" // Replace with actual value if available
+                binding.tvDistance.text = "5 km away" // Replace with actual value if available
+
+                // Show verified badge if verified
+                binding.ivVerifiedBadge.visibility =
+                        if (it.verificationStatus == "verified") View.VISIBLE else View.GONE
+
+                // Set relationship status (dummy for now)
+                binding.tvRelationshipStatus?.text = "Dating 👋"
 
                 // Set bio
                 binding.tvBio.text = it.bio.ifEmpty { "No bio added yet" }
@@ -111,8 +134,21 @@ class ProfileFragment : Fragment() {
 
                 // Set interests
                 binding.chipGroupInterests.removeAllViews()
-                // Add interest chips here
+                it.interests.forEach { interest ->
+                    val chip = Chip(requireContext())
+                    chip.text = interest
+                    chip.isClickable = false
+                    chip.isCheckable = false
+                    binding.chipGroupInterests.addView(chip)
+                }
             }
+        }
+
+        // Social icon click listeners (show Toast for now)
+        // Camera icon click
+        binding.ivEditPhoto?.setOnClickListener {
+            Toast.makeText(requireContext(), "Edit photo clicked", Toast.LENGTH_SHORT).show()
+            // TODO: Launch photo picker or edit photo screen
         }
     }
 
