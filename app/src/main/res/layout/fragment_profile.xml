@@ -32,19 +32,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:paddingTop="16dp">
 
                     <ImageButton
                         android:id="@+id/close_btn"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
+                        android:visibility="gone"
                         android:scaleType="fitXY"
                         android:layout_gravity="center"
                         android:layout_marginStart="8dp"
@@ -74,6 +75,7 @@
                         android:id="@+id/btn_filter"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:visibility="gone"
                         android:scaleType="fitXY"
                         android:layout_marginStart="8dp"
                         android:layout_gravity="center"
@@ -90,17 +92,15 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_profile_photo"
                     android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    android:layout_margin="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_height="350dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:layout_marginVertical="10dp"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:strokeColor="@color/white"
-                    app:strokeWidth="2dp">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -131,6 +131,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
@@ -155,12 +156,13 @@
                                 android:layout_weight="1"
                                 android:textAppearance="@style/TextAppearance.NearMe.Headline"
                                 android:textStyle="bold"
-                                tools:text="Alice, 25" />
+                                tools:text="Alice (25)" />
 
                             <ImageView
                                 android:id="@+id/iv_verified_badge"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
+                                android:visibility="gone"
                                 android:layout_marginStart="8dp"
                                 android:contentDescription="@string/verified"
                                 android:src="@drawable/ic_verified"
@@ -173,38 +175,97 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:paddingHorizontal="5dp"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tv_gender"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Woman"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/gender"/>
+                                <TextView
+                                    android:id="@+id/tv_gender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="2dp"
+                                    android:layout_gravity="center"
+                                    android:layout_height="wrap_content"
+                                    android:text="Woman"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body" />
 
-                            <TextView
-                                android:id="@+id/tv_height"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:text="173 cm"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tv_weight"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:text="62 kg"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:scaleType="fitXY"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/length"/>
+                                <TextView
+                                    android:id="@+id/tv_height"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"
+                                    android:text="173 cm, 62 kg"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body" />
 
-                            <TextView
-                                android:id="@+id/tv_distance"
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:text="5 km away"
-                                android:textAppearance="@style/TextAppearance.NearMe.Body" />
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:scaleType="fitXY"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_home"/>
+                                <TextView
+                                    android:id="@+id/tv_weight"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"
+                                    android:text="Live in New York City"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:scaleType="fitXY"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/location"/>
+                                <TextView
+                                    android:id="@+id/tv_distance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_gravity="center"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:text="5 km away"
+                                    android:textAppearance="@style/TextAppearance.NearMe.Body" />
+
+                            </LinearLayout>
+
+
                         </LinearLayout>
 
                         <!-- Location with icon -->
@@ -297,6 +358,7 @@
                 <!-- Interests Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
@@ -352,6 +414,7 @@
                 <!-- Instagram Connection Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
@@ -434,6 +497,7 @@
                 <!-- Privacy & Location Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
@@ -560,6 +624,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
@@ -690,6 +755,7 @@
                 <!-- Add after Interests Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
@@ -721,6 +787,7 @@
                 <!-- Add Basics Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
@@ -748,6 +815,7 @@
 
                 <!-- Add Lifestyle Card -->
                 <com.google.android.material.card.MaterialCardView
+                    android:layout_marginHorizontal="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -774,37 +842,12 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Action Buttons -->
-                <Button
-                    android:id="@+id/btn_premium"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="@color/premium_gold"
-                    android:text="@string/upgrade_to_premium"
-                    android:textAppearance="@style/TextAppearance.NearMe.Button"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_premium"
-                    app:iconGravity="textStart"
-                    app:iconTint="@color/white" />
-
-                <Button
-                    android:id="@+id/btn_settings"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:text="@string/settings"
-                    android:textAppearance="@style/TextAppearance.NearMe.Button"
-                    app:icon="@drawable/ic_settings"
-                    app:iconGravity="textStart" />
-
                 <Button
                     android:id="@+id/btn_logout"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
                     android:text="@string/logout"
                     android:textColor="@color/error_red"
                     app:icon="@drawable/ic_logout"

@@ -53,17 +53,6 @@ class ProfileFragment : Fragment() {
             Log.d(TAG, "Logout button clicked")
             logoutUser()
         }
-
-        // Setup other profile UI components and listeners
-        binding.btnSettings.setOnClickListener {
-            Log.d(TAG, "Settings button clicked")
-            // Navigate to settings screen
-        }
-
-        binding.btnPremium.setOnClickListener {
-            Log.d(TAG, "Premium button clicked")
-            // Navigate to premium screen
-        }
     }
 
     private fun logoutUser() {
