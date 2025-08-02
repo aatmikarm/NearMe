@@ -18,14 +18,11 @@ class UserRepository @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage
 ) {
-    // Add a TAG for logging
+
     private val TAG = "NearMe_UserRepository"
 
     private val usersCollection = firestore.collection("users")
 
-    /**
-     * Get a user's profile
-     */
     suspend fun getUserProfile(userId: String): UserProfile? {
         Log.d(TAG, "Getting user profile for userId: $userId")
         try {
@@ -58,9 +55,6 @@ class UserRepository @Inject constructor(
         return uid
     }
 
-    /**
-     * Create a new user profile
-     */
     suspend fun createUserProfile(userProfile: UserProfile): Boolean {
         Log.d(TAG, "Creating user profile for uid: ${userProfile.uid}")
         return try {
@@ -79,9 +73,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update a user's profile
-     */
     suspend fun updateUserProfile(userId: String, updates: Map<String, Any>): Boolean {
         Log.d(TAG, "Updating user profile for userId: $userId with fields: ${updates.keys}")
         return try {
@@ -100,9 +91,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update user's last active timestamp
-     */
     suspend fun updateLastActive(userId: String) {
         Log.d(TAG, "Updating last active timestamp for userId: $userId")
         try {
@@ -119,11 +107,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Upload a profile photo
-     */
-    // Update in UserRepository.kt
-    // Update in UserRepository.kt
     suspend fun uploadProfilePhoto(userId: String, photoUri: Uri, isPrimary: Boolean = false): UserPhoto? {
         Log.d(TAG, "Uploading profile photo for userId: $userId, isPrimary: $isPrimary")
         val photoId = UUID.randomUUID().toString()
@@ -190,9 +173,8 @@ class UserRepository @Inject constructor(
             Log.e(TAG, "Error uploading profile photo for userId: $userId", e)
             return null
         }
-    } /**
-     * Delete a profile photo
-     */
+    }
+
     suspend fun deleteProfilePhoto(userId: String, photoId: String): Boolean {
         Log.d(TAG, "Deleting profile photo for userId: $userId, photoId: $photoId")
         try {
@@ -240,9 +222,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Connect Instagram account
-     */
     suspend fun connectInstagram(userId: String, instagramId: String): Boolean {
         Log.d(TAG, "Connecting Instagram account for userId: $userId, instagramId: $instagramId")
         return try {
@@ -266,9 +245,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Disconnect Instagram account
-     */
     suspend fun disconnectInstagram(userId: String): Boolean {
         Log.d(TAG, "Disconnecting Instagram account for userId: $userId")
         return try {
@@ -291,9 +267,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update discovery preferences
-     */
     suspend fun updateDiscoveryPreferences(userId: String, preferences: Map<String, Any>): Boolean {
         Log.d(TAG, "Updating discovery preferences for userId: $userId with fields: ${preferences.keys}")
         val prefixedPreferences = preferences.mapKeys { "preferences.${it.key}" }
@@ -314,9 +287,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update privacy settings
-     */
     suspend fun updatePrivacySettings(userId: String, settings: Map<String, Any>): Boolean {
         Log.d(TAG, "Updating privacy settings for userId: $userId with fields: ${settings.keys}")
         val prefixedSettings = settings.mapKeys { "privacy.${it.key}" }
@@ -337,9 +307,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Block a user
-     */
     suspend fun blockUser(userId: String, blockedUserId: String): Boolean {
         Log.d(TAG, "Blocking user: $blockedUserId for userId: $userId")
         return try {
@@ -358,9 +325,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Unblock a user
-     */
     suspend fun unblockUser(userId: String, blockedUserId: String): Boolean {
         Log.d(TAG, "Unblocking user: $blockedUserId for userId: $userId")
         return try {
@@ -379,9 +343,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Get blocked users list
-     */
     suspend fun getBlockedUsers(userId: String): List<String> {
         Log.d(TAG, "Getting blocked users list for userId: $userId")
         try {
@@ -399,9 +360,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update online status
-     */
     suspend fun updateOnlineStatus(userId: String, isOnline: Boolean) {
         Log.d(TAG, "Updating online status for userId: $userId to $isOnline")
         try {
@@ -418,9 +376,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Increment user statistic
-     */
     suspend fun incrementStatistic(userId: String, statisticField: String, amount: Int = 1) {
         Log.d(TAG, "Incrementing statistic '$statisticField' by $amount for userId: $userId")
         try {
@@ -440,9 +395,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    /**
-     * Update subscription information
-     */
     suspend fun updateSubscription(userId: String, subscription: SubscriptionInfo): Boolean {
         Log.d(TAG, "Updating subscription for userId: $userId, plan: ${subscription.plan}")
         return try {

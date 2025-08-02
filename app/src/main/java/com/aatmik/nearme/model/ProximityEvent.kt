@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ProximityEvent(
     val id: String = "",
-    val users: List<String> = emptyList(), // Add default value
-    val distance: Double = 0.0, // Add default value
-    val startTime: Long = 0, // Add default value
+    val users: List<String> = emptyList(),
+    val distance: Double = 0.0,
+    val startTime: Long = 0,
     val endTime: Long? = null,
-    val location: ProximityLocation = ProximityLocation(), // Add default value
+    val location: ProximityLocation = ProximityLocation(),
     val status: String = "active",
     val notificationSent: Boolean = false,
     val viewedBy: List<String> = emptyList()

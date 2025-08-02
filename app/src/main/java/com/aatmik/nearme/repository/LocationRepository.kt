@@ -20,7 +20,6 @@ class LocationRepository @Inject constructor(
     private val notificationUtil: NotificationUtil,
     private val userRepository: UserRepository
 ) {
-    // Add a TAG for logging
     private val TAG = "NearMe_LocationRepo"
 
     private val locationsCollection = firestore.collection("locations")

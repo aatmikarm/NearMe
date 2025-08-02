@@ -16,7 +16,7 @@ class MatchRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val notificationUtil: NotificationUtil
 ) {
-    // Add a TAG for logging
+
     private val TAG = "NearMe_MatchRepository"
 
     private val matchesCollection = firestore.collection("matches")
