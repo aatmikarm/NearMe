@@ -20,7 +20,6 @@ class AuthRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val preferenceManager: PreferenceManager
 ) {
-    // Add a TAG for logging
     private val TAG = "NearMe_AuthRepository"
 
     // For storing the verification ID

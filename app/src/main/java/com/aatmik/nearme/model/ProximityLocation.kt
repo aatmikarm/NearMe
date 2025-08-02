@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ProximityLocation(
-    val geohash: String = "", // Add default value here
+    val geohash: String = "",
     val placeName: String? = null // General location name (if available)
 ) : Parcelable
