@@ -1,5 +1,5 @@
 // Update MessagesFragment.kt
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.conversations
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,15 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aatmik.nearme.databinding.FragmentMessagesBinding
+import com.aatmik.nearme.ui.messages.chat.ChatActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MessagesFragment : Fragment() {
+class ConversationsFragment : Fragment() {
 
     private var _binding: FragmentMessagesBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MessagesViewModel by viewModels()
+    private val viewModel: ConversationsViewModel by viewModels()
     private lateinit var conversationAdapter: ConversationAdapter
 
     override fun onCreateView(
@@ -45,7 +46,7 @@ class MessagesFragment : Fragment() {
 
     private fun setupRecyclerView() {
         conversationAdapter = ConversationAdapter { conversation, _ ->
-            navigateToChat(conversation.matchId)
+            navigateToChat(conversation.friendId)
         }
 
         binding.rvConversations.apply {
@@ -81,8 +82,8 @@ class MessagesFragment : Fragment() {
         binding.rvConversations.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
-    private fun navigateToChat(matchId: String) {
-        val intent = ChatActivity.createIntent(requireContext(), matchId)
+    private fun navigateToChat(friendId: String) {
+        val intent = ChatActivity.createIntent(requireContext(), friendId)
         startActivity(intent)
     }
 

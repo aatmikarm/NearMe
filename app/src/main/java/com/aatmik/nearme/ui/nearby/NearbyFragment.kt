@@ -9,9 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aatmik.nearme.databinding.FragmentNearbyBinding
-import com.aatmik.nearme.ui.matches.MatchConfirmationActivity
 import com.aatmik.nearme.ui.nearby.filter.FilterBottomSheetFragment
-import com.aatmik.nearme.ui.profile.UserProfileActivity
 import com.aatmik.nearme.util.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -110,10 +108,6 @@ class NearbyFragment : Fragment() {
                     if (matchId != null) {
                         // Show success message
                         binding.root.showSnackbar("Successfully connected!")
-
-                        // Optionally navigate to match confirmation
-                        val intent = MatchConfirmationActivity.createIntent(requireContext(), matchId)
-                        startActivity(intent)
                     }
                 } else {
                     binding.root.showSnackbar("Failed to connect: ${it.exceptionOrNull()?.message}")
@@ -125,18 +119,6 @@ class NearbyFragment : Fragment() {
         viewModel.skipResult.observe(viewLifecycleOwner) { success ->
             if (success) {
                 binding.root.showSnackbar("User skipped")
-            }
-        }
-
-        // Observe matchToShow
-        viewModel.matchToShow.observe(viewLifecycleOwner) { match ->
-            match?.let {
-                // Navigate to match confirmation
-                val intent = MatchConfirmationActivity.createIntent(requireContext(), it.id)
-                startActivity(intent)
-
-                // Clear the notification so it doesn't show again
-                viewModel.clearMatchNotification()
             }
         }
     }
@@ -161,8 +143,7 @@ class NearbyFragment : Fragment() {
     }
 
     private fun openUserProfile(user: NearbyUserModel) {
-        val intent = UserProfileActivity.createIntent(requireContext(), user.userId)
-        startActivity(intent)
+
     }
 
     private fun openFilterBottomSheet() {

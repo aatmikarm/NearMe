@@ -1,5 +1,5 @@
 // Update MessagesViewModel.kt
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.conversations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,18 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aatmik.nearme.model.Conversation
 import com.aatmik.nearme.model.UserProfile
-import com.aatmik.nearme.model.Match
 import com.aatmik.nearme.repository.ConversationRepository
-import com.aatmik.nearme.repository.MatchRepository
+import com.aatmik.nearme.repository.FriendRepository
 import com.aatmik.nearme.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MessagesViewModel @Inject constructor(
+class ConversationsViewModel @Inject constructor(
     private val conversationRepository: ConversationRepository,
-    private val matchRepository: MatchRepository,
+    private val friendRepository: FriendRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -35,7 +34,7 @@ class MessagesViewModel @Inject constructor(
         loadConversations()
     }
 
-    // Update MessagesViewModel.kt to include match data
+    // Update MessagesViewModel.kt to include friend data
     fun loadConversations() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -43,21 +42,21 @@ class MessagesViewModel @Inject constructor(
             try {
                 val userId = userRepository.getCurrentUserId() ?: return@launch
 
-                // Get all active matches
-                val matches = matchRepository.getMatches(userId)
+                // Get all friends
+                val friends = friendRepository.getFriends(userId)
                 val conversationsWithProfiles = mutableListOf<Pair<Conversation, UserProfile>>()
 
-                for (match in matches) {
+                for (friend in friends) {
                     try {
-                        // Get or create conversation for this match
-                        val conversation = conversationRepository.getOrCreateConversation(match.id)
+                        // Get or create conversation for this friend
+                        val conversation = conversationRepository.getOrCreateConversation(friend.id)
 
                         // Get other user profile
-                        val otherUserId = match.users.firstOrNull { it != userId } ?: continue
+                        val otherUserId = friend.users.firstOrNull { it != userId } ?: continue
                         val otherUserProfile = userRepository.getUserProfile(otherUserId) ?: continue
 
-                        // Add match last message data to the conversation
-                        conversation.lastMessage = match.lastMessage
+                        // Add friend last message data to the conversation
+                        conversation.lastMessage = friend.lastMessage
 
                         conversationsWithProfiles.add(Pair(conversation, otherUserProfile))
                     } catch (e: Exception) {
@@ -68,8 +67,8 @@ class MessagesViewModel @Inject constructor(
 
                 // Sort conversations by last update time (most recent first)
                 conversationsWithProfiles.sortByDescending {
-                    val match = matches.find { m -> m.id == it.first.matchId }
-                    match?.lastInteraction ?: it.first.updatedAt
+                    val friend = friends.find { f -> f.id == it.first.friendId }
+                    friend?.lastInteraction ?: it.first.updatedAt
                 }
 
                 _conversations.value = conversationsWithProfiles

@@ -5,9 +5,9 @@
         android:icon="@drawable/ic_home"
         android:title="@string/nearby" />
     <item
-        android:id="@+id/navigation_matches"
+        android:id="@+id/navigation_friends"
         android:icon="@drawable/ic_matches"
-        android:title="@string/matches" />
+        android:title="@string/friends" />
     <item
         android:id="@+id/navigation_messages"
         android:icon="@drawable/ic_messages"

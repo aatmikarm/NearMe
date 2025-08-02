@@ -35,16 +35,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Firebase Test Activity (Set as LAUNCHER) -->
-        <activity
-            android:name=".ui.test.FirebaseTestActivity"
-            android:exported="true">
-       <!--     <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-
         <!-- Main Activity -->
         <activity
             android:name=".ui.main.MainActivity"
@@ -65,24 +55,14 @@
             android:name=".ui.profile.CreateProfileActivity"
             android:exported="false" />
 
-        <!-- User Profile Activity -->
-        <activity
-            android:name=".ui.profile.UserProfileActivity"
-            android:exported="false" />
-
         <!-- Chat Activity -->
         <activity
-            android:name=".ui.messages.ChatActivity"
+            android:name=".ui.messages.chat.ChatActivity"
             android:exported="false" />
 
         <!-- Proximity Match Activity -->
         <activity
-            android:name=".ui.nearby.ProximityMatchActivity"
-            android:exported="false" />
-
-        <!-- Match Confirmation Activity -->
-        <activity
-            android:name=".ui.matches.MatchConfirmationActivity"
+            android:name=".ui.nearby.ProximityRequestActivity"
             android:exported="false" />
 
         <!-- Location Service -->

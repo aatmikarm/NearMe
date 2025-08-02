@@ -6,12 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aatmik.nearme.model.Match
+import com.aatmik.nearme.model.Friend
 import com.aatmik.nearme.model.ProximityEvent
 import com.aatmik.nearme.model.UserLocation
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.LocationRepository
-import com.aatmik.nearme.repository.MatchRepository
+import com.aatmik.nearme.repository.FriendRepository
 import com.aatmik.nearme.repository.UserRepository
 import com.aatmik.nearme.util.PreferenceManager
 import com.google.firebase.auth.FirebaseAuth
@@ -26,17 +26,17 @@ class NearbyViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val userRepository: UserRepository,
     private val preferenceManager: PreferenceManager,
-    private val matchRepository: MatchRepository
+    private val friendRepository: FriendRepository
 ) : ViewModel() {
 
-    // Add a set to track shown match IDs
-    private val shownMatchIds = mutableSetOf<String>()
+    // Add a set to track shown friend request IDs
+    private val shownFriendIds = mutableSetOf<String>()
 
-    // Add a flag to prevent showing matches when returning to fragment
-    private var hasShownMatchOnCurrentSession = false
+    // Add a flag to prevent showing friend notifications when returning to fragment
+    private var hasShownFriendOnCurrentSession = false
 
-    private val _matchToShow = MutableLiveData<Match?>()
-    val matchToShow: LiveData<Match?> = _matchToShow
+    private val _friendToShow = MutableLiveData<Friend?>()
+    val friendToShow: LiveData<Friend?> = _friendToShow
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -135,19 +135,19 @@ class NearbyViewModel @Inject constructor(
                 val events = locationRepository.getActiveProximityEvents(currentUserId)
                 _activeProximityEvents.value = events
 
-                // Check for matches but only show ones we haven't shown before
+                // Check for friends but only show ones we haven't shown before
                 // AND only if we're not returning to the fragment
-                if (!hasShownMatchOnCurrentSession) {
+                if (!hasShownFriendOnCurrentSession) {
                     events.forEach { event ->
-                        if (event.status == "matched" && !shownMatchIds.contains(event.id)) {
-                            // Check if there's a match for this event
-                            val match = matchRepository.getMatchByProximityEventId(event.id)
-                            if (match != null) {
-                                _matchToShow.value = match
-                                // Add to shown matches set so we don't show it again
-                                shownMatchIds.add(event.id)
-                                // Set the flag to prevent showing matches on fragment return
-                                hasShownMatchOnCurrentSession = true
+                        if (event.status == "matched" && !shownFriendIds.contains(event.id)) {
+                            // Check if there's a friend for this event
+                            val friend = friendRepository.getFriendByProximityEventId(event.id)
+                            if (friend != null) {
+                                _friendToShow.value = friend
+                                // Add to shown friends set so we don't show it again
+                                shownFriendIds.add(event.id)
+                                // Set the flag to prevent showing friends on fragment return
+                                hasShownFriendOnCurrentSession = true
                                 return@forEach
                             }
                         }
@@ -161,12 +161,12 @@ class NearbyViewModel @Inject constructor(
 
     // Add a method to reset session flag when fragment is destroyed
     fun onFragmentDestroyed() {
-        hasShownMatchOnCurrentSession = false
+        hasShownFriendOnCurrentSession = false
     }
 
-    // Add a method to clear the match notification
-    fun clearMatchNotification() {
-        _matchToShow.value = null
+    // Add a method to clear the friend notification
+    fun clearFriendNotification() {
+        _friendToShow.value = null
     }
 
     /**
@@ -253,7 +253,7 @@ class NearbyViewModel @Inject constructor(
     }
 
     /**
-     * Handle connect action
+     * Handle connect action - send friend request
      */
     fun connectWithUser(userId: String) {
         viewModelScope.launch {
@@ -269,24 +269,24 @@ class NearbyViewModel @Inject constructor(
                 val event = events.firstOrNull { it.users.containsAll(userIds) }
 
                 if (event != null) {
-                    // Create a match with this user
-                    val matchId = matchRepository.createOrUpdateMatch(currentUserId, userId, event.id)
+                    // Send friend request
+                    val requestId = friendRepository.sendFriendRequest(currentUserId, userId, event.id)
 
                     // Update event status to matched
                     locationRepository.updateProximityEventStatus(event.id, "matched")
 
-                    // Add to shown matches set so we don't show it again
-                    shownMatchIds.add(event.id)
+                    // Add to shown friends set so we don't show it again
+                    shownFriendIds.add(event.id)
 
-                    // Set the flag to prevent showing matches on fragment return
-                    hasShownMatchOnCurrentSession = true
+                    // Set the flag to prevent showing friends on fragment return
+                    hasShownFriendOnCurrentSession = true
 
-                    // Refresh lists after matching
+                    // Refresh lists after sending request
                     loadActiveProximityEvents()
                     loadNearbyUsers()
 
                     // Send success message
-                    _connectResult.value = Result.success(matchId)
+                    _connectResult.value = Result.success(requestId)
                 } else {
                     _connectResult.value = Result.failure(Exception("No active proximity event found"))
                 }

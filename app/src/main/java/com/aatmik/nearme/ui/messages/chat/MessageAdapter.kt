@@ -1,5 +1,5 @@
 // MessageAdapter.kt
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.chat
 
 import android.view.LayoutInflater
 import android.view.View

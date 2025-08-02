@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_nearby" />
 
     <fragment
-        android:id="@+id/navigation_matches"
-        android:name="com.aatmik.nearme.ui.matches.MatchesFragment"
+        android:id="@+id/navigation_friends"
+        android:name="com.aatmik.nearme.ui.friends.FriendsFragment"
         android:label="@string/matches"
-        tools:layout="@layout/fragment_matches" />
+        tools:layout="@layout/fragment_friends" />
 
     <fragment
         android:id="@+id/navigation_messages"
-        android:name="com.aatmik.nearme.ui.messages.MessagesFragment"
+        android:name="com.aatmik.nearme.ui.messages.conversations.ConversationsFragment"
         android:label="@string/messages"
         tools:layout="@layout/fragment_messages" />
 

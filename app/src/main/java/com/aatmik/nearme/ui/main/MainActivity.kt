@@ -15,7 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.aatmik.nearme.R
 import com.aatmik.nearme.databinding.ActivityMainBinding
 import com.aatmik.nearme.service.LocationService
-import com.aatmik.nearme.ui.nearby.ProximityMatchActivity
+import com.aatmik.nearme.ui.nearby.ProximityRequestActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -171,11 +171,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Observe selected proximity event to open ProximityMatch screen
+        // Observe selected proximity event to open ProximityRequest screen
         viewModel.selectedProximityEvent.observe(this) { event ->
             event?.let {
-                // Open ProximityMatch activity when an event is selected
-                val intent = ProximityMatchActivity.createIntent(this, it.id)
+                // Open ProximityRequest activity when an event is selected
+                val intent = ProximityRequestActivity.createIntent(this, it.id)
                 startActivity(intent)
 
                 // Clear the selected event after opening

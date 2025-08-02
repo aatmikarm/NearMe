@@ -9,16 +9,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.aatmik.nearme.R
-import com.aatmik.nearme.databinding.ActivityProximityMatchBinding
-import com.aatmik.nearme.ui.matches.MatchConfirmationActivity
+import com.aatmik.nearme.databinding.ActivityProximityRequestBinding
 import com.aatmik.nearme.util.formatDistance
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProximityMatchActivity : AppCompatActivity() {
+class ProximityRequestActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProximityMatchBinding
-    private val viewModel: ProximityMatchViewModel by viewModels()
+    private lateinit var binding: ActivityProximityRequestBinding
+    private val viewModel: ProximityRequestViewModel by viewModels()
 
     private var eventId: String? = null
 
@@ -26,7 +25,7 @@ class ProximityMatchActivity : AppCompatActivity() {
         private const val EXTRA_EVENT_ID = "event_id"
 
         fun createIntent(context: Context, eventId: String): Intent {
-            return Intent(context, ProximityMatchActivity::class.java).apply {
+            return Intent(context, ProximityRequestActivity::class.java).apply {
                 putExtra(EXTRA_EVENT_ID, eventId)
             }
         }
@@ -35,7 +34,7 @@ class ProximityMatchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityProximityMatchBinding.inflate(layoutInflater)
+        binding = ActivityProximityRequestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         eventId = intent.getStringExtra(EXTRA_EVENT_ID)
@@ -51,14 +50,14 @@ class ProximityMatchActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Connect button
+        // Send Friend Request button
         binding.btnConnect.setOnClickListener {
-            viewModel.connectWithUser()
+            viewModel.sendFriendRequest()
         }
 
         // Skip button
         binding.btnSkip.setOnClickListener {
-            viewModel.skipMatch()
+            viewModel.skipRequest()
             finish()
         }
 
@@ -100,22 +99,16 @@ class ProximityMatchActivity : AppCompatActivity() {
             }
         }
 
-        // Observe match result
-        viewModel.matchResult.observe(this) { result ->
+        // Observe friend request result
+        viewModel.requestResult.observe(this) { result ->
             result?.let {
                 if (it.isSuccess) {
-                    // Navigate to match confirmation screen
-                    val matchId = it.getOrNull()
-                    if (matchId != null) {
-                        val intent = MatchConfirmationActivity.createIntent(this, matchId)
-                        startActivity(intent)
-                    }
+                    Toast.makeText(this, "Friend request sent!", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    // Show error
                     Toast.makeText(
                         this,
-                        "Failed to create match: ${it.exceptionOrNull()?.message}",
+                        "Failed to send friend request: ${it.exceptionOrNull()?.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

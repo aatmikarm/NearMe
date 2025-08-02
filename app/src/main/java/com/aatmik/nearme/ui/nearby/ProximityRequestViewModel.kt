@@ -7,17 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.aatmik.nearme.model.ProximityEvent
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.LocationRepository
-import com.aatmik.nearme.repository.MatchRepository
+import com.aatmik.nearme.repository.FriendRepository
 import com.aatmik.nearme.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProximityMatchViewModel @Inject constructor(
+class ProximityRequestViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val userRepository: UserRepository,
-    private val matchRepository: MatchRepository
+    private val friendRepository: FriendRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -29,8 +29,8 @@ class ProximityMatchViewModel @Inject constructor(
     private val _otherUserProfile = MutableLiveData<UserProfile?>()
     val otherUserProfile: LiveData<UserProfile?> = _otherUserProfile
 
-    private val _matchResult = MutableLiveData<Result<String>?>()
-    val matchResult: LiveData<Result<String>?> = _matchResult
+    private val _requestResult = MutableLiveData<Result<String>?>()
+    val requestResult: LiveData<Result<String>?> = _requestResult
 
     /**
      * Load proximity event details
@@ -63,9 +63,9 @@ class ProximityMatchViewModel @Inject constructor(
     }
 
     /**
-     * Connect with the other user
+     * Send friend request to the other user
      */
-    fun connectWithUser() {
+    fun sendFriendRequest() {
         viewModelScope.launch {
             _isLoading.value = true
 
@@ -76,18 +76,18 @@ class ProximityMatchViewModel @Inject constructor(
                 // Update event status
                 locationRepository.updateProximityEventStatus(eventId, "matched")
 
-                // Create match (or update existing match with connect)
+                // Send friend request
                 val currentUserId = userRepository.getCurrentUserId() ?: throw Exception("User not authenticated")
                 val otherUserId = event.users.firstOrNull { it != currentUserId } ?: throw Exception("Other user not found")
 
-                val matchId = matchRepository.createOrUpdateMatch(currentUserId, otherUserId, eventId)
-                _matchResult.value = Result.success(matchId)
+                val requestId = friendRepository.sendFriendRequest(currentUserId, otherUserId, eventId)
+                _requestResult.value = Result.success(requestId)
 
-                // Increment match statistics
-                userRepository.incrementStatistic(currentUserId, "matches")
+                // Increment friend request statistics
+                userRepository.incrementStatistic(currentUserId, "friendRequests")
 
             } catch (e: Exception) {
-                _matchResult.value = Result.failure(e)
+                _requestResult.value = Result.failure(e)
             } finally {
                 _isLoading.value = false
             }
@@ -95,9 +95,9 @@ class ProximityMatchViewModel @Inject constructor(
     }
 
     /**
-     * Skip this proximity match
+     * Skip this proximity request
      */
-    fun skipMatch() {
+    fun skipRequest() {
         viewModelScope.launch {
             try {
                 val event = proximityEvent.value ?: return@launch

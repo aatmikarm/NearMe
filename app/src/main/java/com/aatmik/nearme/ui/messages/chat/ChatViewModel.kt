@@ -1,13 +1,13 @@
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aatmik.nearme.model.Match
+import com.aatmik.nearme.model.Friend
 import com.aatmik.nearme.model.UserProfile
 import com.aatmik.nearme.repository.ConversationRepository
-import com.aatmik.nearme.repository.MatchRepository
+import com.aatmik.nearme.repository.FriendRepository
 import com.aatmik.nearme.model.Message
 import com.aatmik.nearme.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val conversationRepository: ConversationRepository,
-    private val matchRepository: MatchRepository,
+    private val friendRepository: FriendRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -35,32 +35,32 @@ class ChatViewModel @Inject constructor(
     val sendMessageResult: LiveData<Result<String>?> = _sendMessageResult
 
     private var conversationId: String? = null
-    private var match: Match? = null
+    private var friend: Friend? = null
     private var otherUserId: String? = null
 
     /**
-     * Load conversation for a match
+     * Load conversation for a friend
      */
-    fun loadConversation(matchId: String) {
+    fun loadConversation(friendId: String) {
         viewModelScope.launch {
             _isLoading.value = true
 
             try {
-                // Get match
-                match = matchRepository.getMatch(matchId) ?: throw Exception("Match not found")
+                // Get friend
+                friend = friendRepository.getFriend(friendId) ?: throw Exception("Friend not found")
 
                 // Get current user ID
                 val currentUserId = userRepository.getCurrentUserId() ?: throw Exception("User not authenticated")
 
                 // Get other user ID
-                otherUserId = match?.users?.firstOrNull { it != currentUserId } ?: throw Exception("Other user not found")
+                otherUserId = friend?.users?.firstOrNull { it != currentUserId } ?: throw Exception("Other user not found")
 
                 // Get other user profile
                 val otherUserProfile = userRepository.getUserProfile(otherUserId!!) ?: throw Exception("Other user profile not found")
                 _otherUser.value = otherUserProfile
 
                 // Get or create conversation
-                val conversation = conversationRepository.getOrCreateConversation(matchId)
+                val conversation = conversationRepository.getOrCreateConversation(friendId)
                 conversationId = conversation.id
 
                 // Subscribe to messages
@@ -82,7 +82,7 @@ class ChatViewModel @Inject constructor(
     /**
      * Send a message
      */
-    fun sendMessage(matchId: String, text: String) {
+    fun sendMessage(friendId: String, text: String) {
         viewModelScope.launch {
             try {
                 val convId = conversationId ?: throw Exception("Conversation not loaded")
@@ -91,8 +91,8 @@ class ChatViewModel @Inject constructor(
                 val messageId = conversationRepository.sendMessage(convId, currentUserId, text)
                 _sendMessageResult.value = Result.success(messageId)
 
-                // Update last message in match
-                matchRepository.updateLastMessage(matchId, text, currentUserId)
+                // Update last message in friend
+                friendRepository.updateLastMessage(friendId, text, currentUserId)
 
             } catch (e: Exception) {
                 _sendMessageResult.value = Result.failure(e)
@@ -107,7 +107,7 @@ class ChatViewModel @Inject constructor(
         val currentUserId = userRepository.getCurrentUserId() ?: return false
         val otherUser = otherUserId ?: return false
 
-        return match?.instagramShared?.get(otherUser) == true
+        return friend?.instagramShared?.get(otherUser) == true
     }
 
     /**

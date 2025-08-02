@@ -1,4 +1,4 @@
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.chat
 
 import android.content.Context
 import android.content.Intent
@@ -22,14 +22,14 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var messageAdapter: MessageAdapter
 
-    private var matchId: String? = null
+    private var friendId: String? = null
 
     companion object {
-        private const val EXTRA_MATCH_ID = "match_id"
+        private const val EXTRA_FRIEND_ID = "friend_id"
 
-        fun createIntent(context: Context, matchId: String): Intent {
+        fun createIntent(context: Context, friendId: String): Intent {
             return Intent(context, ChatActivity::class.java).apply {
-                putExtra(EXTRA_MATCH_ID, matchId)
+                putExtra(EXTRA_FRIEND_ID, friendId)
             }
         }
     }
@@ -40,8 +40,8 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        matchId = intent.getStringExtra(EXTRA_MATCH_ID)
-        if (matchId == null) {
+        friendId = intent.getStringExtra(EXTRA_FRIEND_ID)
+        if (friendId == null) {
             Toast.makeText(this, "Invalid conversation", Toast.LENGTH_SHORT).show()
             finish()
             return
@@ -133,13 +133,13 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun loadConversation() {
-        matchId?.let {
+        friendId?.let {
             viewModel.loadConversation(it)
         }
     }
 
     private fun sendMessage(text: String) {
-        matchId?.let {
+        friendId?.let {
             viewModel.sendMessage(it, text)
         }
     }

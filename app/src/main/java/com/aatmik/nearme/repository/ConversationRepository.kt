@@ -26,10 +26,10 @@ class ConversationRepository @Inject constructor(
     private val conversationsCollection = firestore.collection("conversations")
 
     /**
-     * Get or create a conversation for a match
+     * Get or create a conversation for a friend
      */
-    suspend fun getOrCreateConversation(matchId: String): Conversation {
-        Log.d(TAG, "Getting or creating conversation for matchId: $matchId")
+    suspend fun getOrCreateConversation(friendId: String): Conversation {
+        Log.d(TAG, "Getting or creating conversation for friendId: $friendId")
 
         try {
             val startTime = System.currentTimeMillis()
@@ -37,14 +37,14 @@ class ConversationRepository @Inject constructor(
             // Check if conversation exists
             Log.d(TAG, "Checking if conversation already exists")
             val query = conversationsCollection
-                .whereEqualTo("matchId", matchId)
+                .whereEqualTo("friendId", friendId)
                 .limit(1)
                 .get()
                 .await()
 
             if (!query.isEmpty) {
                 // Return existing conversation
-                Log.d(TAG, "Found existing conversation for matchId: $matchId")
+                Log.d(TAG, "Found existing conversation for friendId: $friendId")
                 val document = query.documents.first()
                 val conversation = document.toObject(Conversation::class.java)?.copy(id = document.id)
 
@@ -58,22 +58,22 @@ class ConversationRepository @Inject constructor(
                 return conversation
             }
 
-            // Get match details to create conversation
+            // Get friend details to create conversation
             Log.d(TAG, "No existing conversation found, creating new one")
-            Log.d(TAG, "Fetching match details from Firestore")
-            val matchDocument = firestore.collection("matches").document(matchId).get().await()
-            val users = matchDocument.get("users") as? List<String>
+            Log.d(TAG, "Fetching friend details from Firestore")
+            val friendDocument = firestore.collection("friends").document(friendId).get().await()
+            val users = friendDocument.get("users") as? List<String>
 
             if (users == null) {
-                Log.e(TAG, "Invalid match data: users list is null")
-                throw Exception("Invalid match data")
+                Log.e(TAG, "Invalid friend data: users list is null")
+                throw Exception("Invalid friend data")
             }
 
             Log.d(TAG, "Creating new conversation with ${users.size} participants")
 
             // Create new conversation
             val conversation = Conversation(
-                matchId = matchId,
+                friendId = friendId,
                 participants = users,
                 createdAt = System.currentTimeMillis(),
                 updatedAt = System.currentTimeMillis(),
@@ -90,7 +90,7 @@ class ConversationRepository @Inject constructor(
 
             return newConversation
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting or creating conversation for matchId: $matchId", e)
+            Log.e(TAG, "Error getting or creating conversation for friendId: $friendId", e)
             throw e
         }
     }

@@ -12,6 +12,7 @@
     <!-- Bottom Navigation -->
     <string name="nearby">Nearby</string>
     <string name="matches">Matches</string>
+    <string name="friends">Friends</string>
     <string name="messages">Messages</string>
     <string name="profile">Profile</string>
 

@@ -1,5 +1,5 @@
 // Create a new file: app/src/main/java/com/aatmik/nearme/ui/messages/ConversationAdapter.kt
-package com.aatmik.nearme.ui.messages
+package com.aatmik.nearme.ui.messages.conversations
 
 import android.view.LayoutInflater
 import android.view.View

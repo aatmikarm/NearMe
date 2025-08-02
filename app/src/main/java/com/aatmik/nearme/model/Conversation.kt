@@ -7,12 +7,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Conversation(
     val id: String = "",
-    val matchId: String = "",
+    val friendId: String = "",
     val participants: List<String> = emptyList(),
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
     val lastReadBy: Map<String, Long> = emptyMap(), // User ID to timestamp
-    var lastMessage: MessagePreview? = null // Prakriti Added this field
+    var lastMessage: MessagePreview? = null // For UI purposes
 ) : Parcelable
 
 @Parcelize
